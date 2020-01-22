@@ -1,0 +1,7 @@
+{
+  "name": "ulysses-core",
+  "private": false,
+  "version": "0.0.0",
+  "author": "Kennedy Rose <kennedyianrose@gmail.com>",
+  "main": "index.js"
+}
