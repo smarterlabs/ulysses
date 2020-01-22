@@ -1,5 +1,10 @@
-const preset = require(`../dist`).default
+const Ulysses = require(`../dist`).default
 
-test(`exports a function`, () => {
-	expect(typeof preset).toBe(`function`)
+test(`Exports a function`, () => {
+	expect(typeof Ulysses).toBe(`function`)
+})
+test(`Cart can add products`, () => {
+	const ulysses = new Ulysses()
+	ulysses.cart.add({ id: 1 })
+	expect(ulysses.cart.contents[0].id).toBe(1)
 })
