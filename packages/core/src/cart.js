@@ -21,6 +21,9 @@ class Cart {
 		const productInCart = this.getProduct(product.id)
 		if(productInCart){
 			product.quantity += productInCart.quantity
+			if(product.quantity > product.totalQuantity){
+				product.quantity = product.totalQuantity
+			}
 			const index = this.contents.indexOf(productInCart)
 			this.contents[index] = product
 		}
