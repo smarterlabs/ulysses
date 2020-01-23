@@ -1,0 +1,21 @@
+{
+  "name": "sandbox",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "build": "gatsby build --verbose",
+    "clean": "gatsby clean",
+    "dev": "gatsby develop --open",
+    "develop": "yarn run dev",
+    "serve": "gatsby serve --open"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.6.0",
+    "babel-preset-gatsby": "^0.2.13",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "gatsby": "^2.13.80"
+  },
+  "main": "dist/index.js",
+  "devDependencies": { }
+}
