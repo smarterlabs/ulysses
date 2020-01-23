@@ -41,7 +41,7 @@ export default () => {
 
 				<h3>Contents</h3>
 				{cartContents.map((item ,index) => (
-					<li key={index}>{item.name}</li>
+					<li key={index}>{item.name} x{item.quantity}</li>
 				))}
 			</section>
 		</main>

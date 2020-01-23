@@ -8,14 +8,26 @@ class Cart {
 		this.ulysses.triggerEventListeners(`cart.init`)
 	}
 	add(product) {
+		product = {...product}
 		if(!(`quantity` in product)){
 			product.quantity = 1
 		}
+		console.log(product.quantity)
 		if(!(`id` in product)){
-			console.log(`Product needs an "id" property`)
+			console.error(`Product needs an "id" property`)
 		}
-		console.log(this.contents)
-		this.contents.push(product)
+
+		// Check if product is already in cart
+		const productInCart = this.getProduct(product.id)
+		if(productInCart){
+			product.quantity += productInCart.quantity
+			const index = this.contents.indexOf(productInCart)
+			this.contents[index] = product
+		}
+		else {
+			this.contents.push(product)
+		}
+
 		this.ulysses.triggerEventListeners(`cart.add`, product)
 		this.ulysses.triggerEventListeners(`cart.onChange`, this.contents, `add`)
 	}
