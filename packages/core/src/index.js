@@ -38,9 +38,9 @@ export class Ulysses{
 		if(this.eventListeners[label]) return
 		this.eventListeners[label] = []
 	}
-	triggerEventListeners(label, args) {
+	triggerEventListeners(label, ...args) {
 		if (!this.eventListeners[label]) return
-		this.eventListeners[label].map(fn => fn(args))
+		this.eventListeners[label].map(fn => fn(...args))
 	}
 }
 

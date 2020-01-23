@@ -5,6 +5,7 @@ class Cart {
 		ulysses.cart = this
 		this.ulysses = ulysses
 		this.contents = options.contents || []
+		this.ulysses.triggerEventListeners(`cart.init`)
 	}
 	add(product) {
 		if(!(`quantity` in product)){
@@ -13,8 +14,10 @@ class Cart {
 		if(!(`id` in product)){
 			console.log(`Product needs an "id" property`)
 		}
+		console.log(this.contents)
 		this.contents.push(product)
 		this.ulysses.triggerEventListeners(`cart.add`, product)
+		this.ulysses.triggerEventListeners(`cart.onChange`, this.contents, `add`)
 	}
 	remove(product) {
 		const productToRemove = this.getProduct(product)
@@ -24,10 +27,13 @@ class Cart {
 			return
 		}
 		this.contents.splice(index, 1)
+		this.ulysses.triggerEventListeners(`cart.remove`, productToRemove)
+		this.ulysses.triggerEventListeners(`cart.onChange`, this.contents, `remove`)
 	}
 	clear() {
 		this.contents.length = 0
 		this.ulysses.triggerEventListeners(`cart.clear`)
+		this.ulysses.triggerEventListeners(`cart.onChange`, this.contents, `clear`)
 	}
 	getProduct(id){
 		if(typeof id == `object`) return id
