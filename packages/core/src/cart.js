@@ -8,11 +8,13 @@ class Cart {
 		this.ulysses.triggerEventListeners(`cart.init`)
 	}
 	add(product) {
+		// Create copy so we don't alter the original for future adds
 		product = {...product}
 		if(!(`quantity` in product)){
 			product.quantity = 1
 		}
-		console.log(product.quantity)
+
+		// Error if ID is missing
 		if(!(`id` in product)){
 			console.error(`Product needs an "id" property`)
 		}
