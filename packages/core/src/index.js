@@ -1,4 +1,5 @@
 import cart from './cart'
+import user from './user'
 
 export class Ulysses{
 	constructor({
@@ -11,6 +12,7 @@ export class Ulysses{
 		if(noPlugins === false){
 			plugins.unshift(
 				cart(),
+				user(),
 			)
 		}
 

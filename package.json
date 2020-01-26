@@ -7,12 +7,13 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "build": "cd packages/core && yarn build",
     "dev": "yarn run dev:sandbox",
     "dev:core": "cd packages/core && yarn dev",
     "dev:sandbox": "cd packages/sandbox && yarn dev",
     "lint": "eslint ./",
     "lint:fix": "eslint ./ --fix",
-    "test": "jest"
+    "test": "yarn run build && jest"
   },
   "husky": {
     "hooks": {
