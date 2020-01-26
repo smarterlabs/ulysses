@@ -43,6 +43,7 @@ class User {
 		return address
 	}
 	removeAddress(address) {
+		address = this.getAddress(address)
 		const index = this.addresses.indexOf(address)
 		if (index > -1) {
 			this.addresses.splice(index, 1)
@@ -56,11 +57,28 @@ class User {
 		return paymentMethod
 	}
 	removePaymentMethod(paymentMethod) {
+		paymentMethod = this.getPaymentMethod(paymentMethod)
 		const index = this.paymentMethods.indexOf(paymentMethod)
 		if (index > -1) {
 			this.paymentMethods.splice(index, 1)
 		}
 		this.ulysses.triggerEventListeners(`user.removePaymentMethod`)
+	}
+	getPaymentMethod(id) {
+		if (typeof id == `object`) return id
+		for (let method of this.paymentMethods) {
+			if (method.id === id) {
+				return method
+			}
+		}
+	}
+	getAddress(id) {
+		if (typeof id == `object`) return id
+		for (let address of this.addresses) {
+			if (address.id === id) {
+				return address
+			}
+		}
 	}
 }
 
