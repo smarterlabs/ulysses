@@ -29,7 +29,7 @@ export class Ulysses{
 		this.createEventType(on)
 		const index = this.eventListeners[on].indexOf(fn)
 		if (index == -1) {
-			console.error(`Event listener type "${on}" not found`)
+			console.error(`Event listener type not found:`, on)
 			return
 		}
 		this.eventListeners[on].splice(index, 1)

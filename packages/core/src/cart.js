@@ -10,6 +10,8 @@ class Cart {
 	add(product) {
 		// Create copy so we don't alter the original for future adds
 		product = {...product}
+
+		// Correct quantity
 		if(!(`quantity` in product)){
 			product.quantity = 1
 		}
