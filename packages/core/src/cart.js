@@ -4,6 +4,9 @@ class Cart {
 	constructor(ulysses, options){
 		ulysses.cart = this
 		this.ulysses = ulysses
+		if(!(`Product` in this.ulysses)){
+			this.ulysses.Product = Product
+		}
 		this.contents = options.contents || []
 		this.ulysses.triggerEventListeners(`cart.init`)
 	}
@@ -61,6 +64,22 @@ class Cart {
 				return product
 			}
 		}
+	}
+}
+
+class Product {
+	constructor(ulysses, product) {
+		if (!(`id` in product)) {
+			throw `Product needs an "id" property`
+		}
+
+		this.ulysses = ulysses
+		for (let key in product) {
+			this[key] = product[key]
+		}
+	}
+	remove() {
+		this.ulysses.cart.remove(this)
 	}
 }
 
