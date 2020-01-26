@@ -18,6 +18,9 @@ class User {
 		if (!(`Address` in this.ulysses)){
 			this.ulysses.Address = Address
 		}
+		if (!(`PaymentMethod` in this.ulysses)){
+			this.ulysses.PaymentMethod = PaymentMethod
+		}
 
 		// Set defaults
 		for(let key in defaults){
@@ -46,6 +49,19 @@ class User {
 		}
 		this.ulysses.triggerEventListeners(`user.removeAddress`)
 	}
+	addPaymentMethod(obj){
+		const paymentMethod = new this.ulysses.PaymentMethod(this.ulysses, obj)
+		this.paymentMethods.push(paymentMethod)
+		this.ulysses.triggerEventListeners(`user.addPaymentMethod`)
+		return paymentMethod
+	}
+	removePaymentMethod(paymentMethod) {
+		const index = this.paymentMethods.indexOf(paymentMethod)
+		if (index > -1) {
+			this.paymentMethods.splice(index, 1)
+		}
+		this.ulysses.triggerEventListeners(`user.removePaymentMethod`)
+	}
 }
 
 class Address{
@@ -58,6 +74,18 @@ class Address{
 	}
 	remove(){
 		this.ulysses.user.removeAddress(this)
+	}
+}
+class PaymentMethod{
+	constructor(ulysses, paymentMethod){
+		this.ulysses = ulysses
+		this.addresses = ulysses.user.paymentMethods
+		for (let key in paymentMethod){
+			this[key] = paymentMethod[key]
+		}
+	}
+	remove(){
+		this.ulysses.user.removePaymentMethod(this)
 	}
 }
 

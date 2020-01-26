@@ -13,6 +13,11 @@ test(`Cart can add products`, () => {
 
 test(`User can add address`, () => {
 	const ulysses = new Ulysses()
-	ulysses.user.addAddress({ id: `test` })
-	expect(ulysses.user.addresses[0].id).toBe(`test`)
+	ulysses.user.addAddress({ id: `addressTest` })
+	expect(ulysses.user.addresses[0].id).toBe(`addressTest`)
+})
+test(`User can add payment method`, () => {
+	const ulysses = new Ulysses()
+	ulysses.user.addPaymentMethod({ id: `paymentMethodTest` })
+	expect(ulysses.user.paymentMethods[0].id).toBe(`paymentMethodTest`)
 })
