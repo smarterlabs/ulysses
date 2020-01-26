@@ -1,14 +1,22 @@
 const { Ulysses } = require(`../dist`)
 
-test(`Cart toggle`, () => {
+describe(`Cart toggle`, () => {
 	const ulysses = new Ulysses()
-	expect(ulysses.cart.isOpen).toBe(false)
-	ulysses.cart.open()
-	expect(ulysses.cart.isOpen).toBe(true)
-	ulysses.cart.close()
-	expect(ulysses.cart.isOpen).toBe(false)
-	ulysses.cart.toggle()
-	expect(ulysses.cart.isOpen).toBe(true)
+	test(`Cart should be closed by default`, () => {
+		expect(ulysses.cart.isOpen).toBe(false)
+	})
+	test(`Cart should open`, () => {
+		ulysses.cart.open()
+		expect(ulysses.cart.isOpen).toBe(true)
+	})
+	test(`Cart should close`, () => {
+		ulysses.cart.close()
+		expect(ulysses.cart.isOpen).toBe(false)
+	})
+	test(`Cart should toggle`, () => {
+		ulysses.cart.toggle()
+		expect(ulysses.cart.isOpen).toBe(true)
+	})
 })
 
 describe(`Cart products`, () => {
