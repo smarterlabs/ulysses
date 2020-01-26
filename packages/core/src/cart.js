@@ -8,7 +8,20 @@ class Cart {
 			this.ulysses.Product = Product
 		}
 		this.contents = options.contents || []
+		this.isOpen = options.isOpen || false
 		this.ulysses.triggerEventListeners(`cart.init`)
+	}
+	open(){
+		this.isOpen = true
+		this.ulysses.triggerEventListeners([`cart.open`, `cart.toggle`])
+	}
+	close() {
+		this.isOpen = false
+		this.ulysses.triggerEventListeners([`cart.close`, `cart.toggle`])
+	}
+	toggle() {
+		this.isOpen = !this.isOpen
+		this.ulysses.triggerEventListeners(`cart.toggle`)
 	}
 	add(product) {
 		// Create copy so we don't alter the original for future adds
@@ -28,14 +41,16 @@ class Cart {
 		const productInCart = this.getProduct(product.id)
 		if(productInCart){
 			product.quantity += productInCart.quantity
-			if(product.quantity > product.totalQuantity){
-				product.quantity = product.totalQuantity
-			}
 			const index = this.contents.indexOf(productInCart)
 			this.contents[index] = product
 		}
 		else {
 			this.contents.push(product)
+		}
+
+		// Limit quantity
+		if (product.quantity > product.totalQuantity) {
+			product.quantity = product.totalQuantity
 		}
 
 		this.ulysses.triggerEventListeners(`cart.add`, product)

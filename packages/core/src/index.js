@@ -40,9 +40,14 @@ export class Ulysses{
 		if(this.eventListeners[label]) return
 		this.eventListeners[label] = []
 	}
-	triggerEventListeners(label, ...args) {
-		if (!this.eventListeners[label]) return
-		this.eventListeners[label].map(fn => fn(...args))
+	triggerEventListeners(labels, ...args) {
+		if(!Array.isArray(labels)){
+			labels = [labels]
+		}
+		for (let label of labels) {
+			if (!this.eventListeners[label]) continue
+			this.eventListeners[label].map(fn => fn(...args))
+		}
 	}
 }
 
