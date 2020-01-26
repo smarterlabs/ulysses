@@ -21,6 +21,11 @@ export class Ulysses{
 			initPlugin(this)
 		})
 
+		// Keep "this"
+		this.addEventListener = this.addEventListener.bind(this)
+		this.removeEventListener = this.removeEventListener.bind(this)
+		this.createEventType = this.createEventType.bind(this)
+		this.triggerEventListeners = this.triggerEventListeners.bind(this)
 	}
 
 	addEventListener(on, fn){

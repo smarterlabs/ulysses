@@ -1,27 +1,27 @@
 const { Ulysses } = require(`../dist`)
 
 describe(`Cart toggle`, () => {
-	const ulysses = new Ulysses()
-	test(`Cart should be closed by default`, () => {
+	let ulysses = new Ulysses()
+	test(`Cart is closed by default`, () => {
 		expect(ulysses.cart.isOpen).toBe(false)
 	})
-	test(`Cart should open`, () => {
+	test(`Cart can open`, () => {
 		ulysses.cart.open()
 		expect(ulysses.cart.isOpen).toBe(true)
 	})
-	test(`Cart should close`, () => {
+	test(`Cart can close`, () => {
 		ulysses.cart.close()
 		expect(ulysses.cart.isOpen).toBe(false)
 	})
-	test(`Cart should toggle`, () => {
+	test(`Cart can toggle`, () => {
 		ulysses.cart.toggle()
 		expect(ulysses.cart.isOpen).toBe(true)
 	})
 })
 
 describe(`Cart products`, () => {
-	const ulysses = new Ulysses()
-	const product = {
+	let ulysses = new Ulysses()
+	let product = {
 		id: 1,
 		quantity: 3,
 	}
@@ -37,8 +37,8 @@ describe(`Cart products`, () => {
 })
 
 describe(`User addresses`, () => {
-	const ulysses = new Ulysses()
-	const address = { id: `addressTest` }
+	let ulysses = new Ulysses()
+	let address = { id: `addressTest` }
 
 	test(`User can add an address`, () => {
 		ulysses.user.addAddress(address)
@@ -51,8 +51,8 @@ describe(`User addresses`, () => {
 })
 
 describe(`User payment methods`, () => {
-	const ulysses = new Ulysses()
-	const paymentMethod = { id: `paymentMethodTest` }
+	let ulysses = new Ulysses()
+	let paymentMethod = { id: `paymentMethodTest` }
 
 	test(`User can add a payment method`, () => {
 		ulysses.user.addPaymentMethod(paymentMethod)
@@ -61,5 +61,25 @@ describe(`User payment methods`, () => {
 	test(`User can remove a payment method`, () => {
 		ulysses.user.removePaymentMethod(paymentMethod.id)
 		expect(ulysses.user.paymentMethods.length).toBe(0)
+	})
+})
+
+describe(`Cart events`, () => {
+	let ulysses = new Ulysses()
+	let ael = ulysses.addEventListener
+	let product = { id: 1 }
+
+	test(`cart.add triggers`, () => {
+		let passed = false
+		ael(`cart.add`, () => { passed = true })
+		ulysses.cart.add(product)
+		expect(passed).toBe(true)
+	})
+	test(`cart.remove triggers`, () => {
+		let passed = false
+		ael(`cart.remove`, () => { passed = true })
+		ulysses.cart.add(product)
+		ulysses.cart.remove(product.id)
+		expect(passed).toBe(true)
 	})
 })
