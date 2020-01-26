@@ -1,7 +1,17 @@
 const { Ulysses } = require(`../dist`)
 
+test(`Cart toggle`, () => {
+	const ulysses = new Ulysses()
+	expect(ulysses.cart.isOpen).toBe(false)
+	ulysses.cart.open()
+	expect(ulysses.cart.isOpen).toBe(true)
+	ulysses.cart.close()
+	expect(ulysses.cart.isOpen).toBe(false)
+	ulysses.cart.toggle()
+	expect(ulysses.cart.isOpen).toBe(true)
+})
 
-describe(`Cart methods`, () => {
+describe(`Cart products`, () => {
 	const ulysses = new Ulysses()
 	const product = {
 		id: 1,
