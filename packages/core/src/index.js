@@ -35,7 +35,7 @@ export class Ulysses{
 	removeEventListener(on, fn) {
 		this.createEventType(on)
 		const index = this.eventListeners[on].indexOf(fn)
-		if (index == -1) {
+		if (index === -1) {
 			console.error(`Event listener type not found:`, on)
 			return
 		}

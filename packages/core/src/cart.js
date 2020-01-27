@@ -85,7 +85,7 @@ class Cart {
 class Product {
 	constructor(ulysses, product) {
 		if (!(`id` in product)) {
-			throw `Product needs an "id" property`
+			console.error(`Product needs an "id" property`)
 		}
 
 		this.ulysses = ulysses

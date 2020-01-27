@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
-import { Ulysses } from '../../../core/src'
+import React from 'react'
+import { UlyssesReact, useCart, useContents } from '../react-ulysses'
 
+const WithUlysses = UlyssesReact()
 
 const inventory = [
 	{
@@ -14,36 +15,29 @@ const inventory = [
 		totalQuantity: 5,
 	},
 ]
-const ulysses = new Ulysses()
-window.ulysses = ulysses
 
-export default () => {
-
-	const [cartContents, setCartContents] = useState(ulysses.cart.contents)
-	ulysses.addEventListener(`cart.onChange`, contents => {
-		setCartContents([...contents])
-	})
-
-
+function Page(){
+	const cart = useCart()
+	const contents = useContents()
 	return (
 		<main>
 			<section>
-				<h2>Cart</h2>
-
-				<h3>Actions</h3>
-				<div>
-					{inventory.map((obj, index) => (
-						<button key={index} onClick={() => ulysses.cart.add(obj)}>
-							Add {obj.name}
-						</button>
-					))}
-				</div>
-
-				<h3>Contents</h3>
-				{cartContents.map((item ,index) => (
+				<button onClick={() => cart.add(inventory[0])}>Add Apple</button>
+			</section>
+			<ul>
+				{contents.map((item, index) => (
 					<li key={index}>{item.name} x{item.quantity}</li>
 				))}
-			</section>
+			</ul>
 		</main>
+	)
+}
+
+export default () => {
+
+	return (
+		<WithUlysses>
+			<Page />
+		</WithUlysses>
 	)
 }
