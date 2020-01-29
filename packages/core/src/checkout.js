@@ -14,6 +14,7 @@ class Checkout {
 		ulysses.checkout = this
 		this.ulysses = ulysses
 		this.modifications = []
+		this.shippingMethods = []
 		this.calculateTotals()
 
 		this.ulysses.triggerEventListeners(`checkout.onInit`)
@@ -73,7 +74,79 @@ class Checkout {
 			}
 		}
 	}
+
+	setShippingOptions(options){
+		if(!Array.isArray(options)){
+			options = [options]
+		}
+		this.shippingMethods.length = 0
+		for(let group of options){
+			this.shippingMethods.push(new ShippingMethodGroup(group))
+		}
+	}
+	setShippingMethod(method){
+		method = this.getShippingMethod(method)
+		this.selectedShippingMethod = method
+	}
+	getShippingMethod(method) {
+		if (typeof method == `object`) return method
+		for (let item of this.shippingMethods) {
+			if (item.id === method) {
+				return item
+			}
+		}
+	}
 }
+
+// const shippingOptions = [
+// 	{
+// 		name: `Product Group 1`,
+// 		methods: [
+// 			{
+// 				name: `Express Shipping`,
+// 				value: 200,
+// 			},
+// 		],
+// 	},
+// ]
+
+
+class ShippingMethodGroup{
+	constructor(ulysses, { methods, ...options }){
+		for(let i in options){
+			this[i] = options[i]
+		}
+		this.methods = []
+		for(let method of methods){
+			this.methods.push(new ShippingMethod(ulysses, this, method))
+		}
+		this.ulysses = ulysses
+	}
+	selectMethod(selected){
+		for(let method of this.methods){
+			if (selected === method){
+				method.selected = true
+			}
+			else{
+				method.selected = false
+			}
+		}
+		this.ulysses.triggerEventListeners(`shipping.onShippingMethodChange`, selected)
+	}
+}
+class ShippingMethod{
+	constructor(ulysses, group, options) {
+		for (let i in options) {
+			this[i] = options[i]
+		}
+		this.ulysses = ulysses
+		this.group = group
+	}
+	select(){
+		this.group.selectMethod(this)
+	}
+}
+
 
 class Modification{
 	constructor(_, options = {}){
