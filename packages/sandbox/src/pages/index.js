@@ -1,5 +1,5 @@
 import React from 'react'
-import { UlyssesReact, useCart, useContents } from '../react-ulysses'
+import { UlyssesReact, useCart, useCartContents } from '../react-ulysses'
 
 const WithUlysses = UlyssesReact()
 
@@ -18,11 +18,13 @@ const inventory = [
 
 function Page(){
 	const cart = useCart()
-	const contents = useContents()
+	const contents = useCartContents()
 	return (
 		<main>
 			<section>
-				<button onClick={() => cart.add(inventory[0])}>Add Apple</button>
+				{inventory.map((item, index) => (
+					<button key={index} onClick={() => cart.add(item)}>Add {item.name}</button>
+				))}
 			</section>
 			<ul>
 				{contents.map((item, index) => (

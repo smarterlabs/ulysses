@@ -24,7 +24,7 @@ export function useCart(){
 	return ulysses.cart
 }
 
-export function useContents(){
+export function useCartContents(){
 	const ulysses = useContext(Context)
 	const [contents, setContents] = useState(ulysses.cart.contents)
 	function onChange(contents){

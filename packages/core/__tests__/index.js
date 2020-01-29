@@ -24,11 +24,15 @@ describe(`Cart products`, () => {
 	let product = {
 		id: 1,
 		quantity: 3,
+		price: 200,
 	}
 	test(`Cart can add a product`, () => {
 		ulysses.cart.add(product)
 		expect(ulysses.cart.contents[0].id).toBe(1)
 		expect(ulysses.cart.contents[0].quantity).toBe(3)
+	})
+	test(`Subtotal changes with cart contents`, () => {
+		expect(ulysses.cart.subtotal).toBe(product.price * product.quantity)
 	})
 	test(`Cart can remove a product by ID`, () => {
 		ulysses.cart.remove(product.id)
@@ -69,15 +73,15 @@ describe(`Cart events`, () => {
 	let ael = ulysses.addEventListener
 	let product = { id: 1 }
 
-	test(`cart.add triggers`, () => {
+	test(`cart.onAdd triggers`, () => {
 		let passed = false
-		ael(`cart.add`, () => { passed = true })
+		ael(`cart.onAdd`, () => { passed = true })
 		ulysses.cart.add(product)
 		expect(passed).toBe(true)
 	})
-	test(`cart.remove triggers`, () => {
+	test(`cart.onRemove triggers`, () => {
 		let passed = false
-		ael(`cart.remove`, () => { passed = true })
+		ael(`cart.onRemove`, () => { passed = true })
 		ulysses.cart.add(product)
 		ulysses.cart.remove(product.id)
 		expect(passed).toBe(true)

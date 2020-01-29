@@ -9,19 +9,20 @@ class Cart {
 		}
 		this.contents = options.contents || []
 		this.isOpen = options.isOpen || false
-		this.ulysses.triggerEventListeners(`cart.init`)
+		this.ulysses.addEventListener(`cart.onChange`, () => this.calculateSubtotal())
+		this.ulysses.triggerEventListeners(`cart.onInit`)
 	}
 	open(){
 		this.isOpen = true
-		this.ulysses.triggerEventListeners([`cart.open`, `cart.toggle`])
+		this.ulysses.triggerEventListeners([`cart.onOpen`, `cart.onToggle`])
 	}
 	close() {
 		this.isOpen = false
-		this.ulysses.triggerEventListeners([`cart.close`, `cart.toggle`])
+		this.ulysses.triggerEventListeners([`cart.onClose`, `cart.onToggle`])
 	}
 	toggle() {
 		this.isOpen = !this.isOpen
-		this.ulysses.triggerEventListeners(`cart.toggle`)
+		this.ulysses.triggerEventListeners(`cart.onToggle`)
 	}
 	add(product) {
 		// Create copy so we don't alter the original for future adds
@@ -53,8 +54,8 @@ class Cart {
 			product.quantity = product.totalQuantity
 		}
 
-		this.ulysses.triggerEventListeners(`cart.add`, product)
-		this.ulysses.triggerEventListeners(`cart.onChange`, this.contents, `add`)
+		this.ulysses.triggerEventListeners(`cart.onAdd`, product)
+		this.handleChange(`add`)
 	}
 	remove(product) {
 		const productToRemove = this.getProduct(product)
@@ -64,13 +65,13 @@ class Cart {
 			return
 		}
 		this.contents.splice(index, 1)
-		this.ulysses.triggerEventListeners(`cart.remove`, productToRemove)
-		this.ulysses.triggerEventListeners(`cart.onChange`, this.contents, `remove`)
+		this.ulysses.triggerEventListeners(`cart.onRemove`, productToRemove)
+		this.handleChange(`remove`)
 	}
 	clear() {
 		this.contents.length = 0
-		this.ulysses.triggerEventListeners(`cart.clear`)
-		this.ulysses.triggerEventListeners(`cart.onChange`, this.contents, `clear`)
+		this.ulysses.triggerEventListeners(`cart.onClear`)
+		this.handleChange(`clear`)
 	}
 	getProduct(id){
 		if(typeof id == `object`) return id
@@ -79,6 +80,17 @@ class Cart {
 				return product
 			}
 		}
+	}
+	calculateSubtotal(){
+		let subtotal = 0
+		for(let product of this.contents){
+			subtotal += product.price * product.quantity
+		}
+		this.subtotal = subtotal
+	}
+	handleChange(type){
+		this.calculateSubtotal()
+		this.ulysses.triggerEventListeners(`cart.onChange`, this.contents, type)
 	}
 }
 
