@@ -20,13 +20,9 @@ export function useUlysses(){
 }
 
 export function useCart(){
+	const { cart } = ulysses
 	const ulysses = useContext(Context)
-	return ulysses.cart
-}
-
-export function useCartContents(){
-	const ulysses = useContext(Context)
-	const [contents, setContents] = useState(ulysses.cart.contents)
+	const [contents, setContents] = useState(cart.contents)
 	function onChange(contents){
 		setContents([...contents])
 	}
@@ -35,5 +31,9 @@ export function useCartContents(){
 		ulysses.addEventListener(`cart.onChange`, onChange)
 		return () => ulysses.removeEventListener(`cart.onChange`, onChange)
 	}, [])
-	return contents
+	return {
+		cart,
+		contents,
+		subtotal: cart.subtotal,
+	}
 }

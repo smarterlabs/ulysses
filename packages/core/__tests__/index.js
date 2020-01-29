@@ -31,12 +31,15 @@ describe(`Cart products`, () => {
 		expect(ulysses.cart.contents[0].id).toBe(1)
 		expect(ulysses.cart.contents[0].quantity).toBe(3)
 	})
-	test(`Subtotal changes with cart contents`, () => {
+	test(`Subtotal changes with product addition`, () => {
 		expect(ulysses.cart.subtotal).toBe(product.price * product.quantity)
 	})
 	test(`Cart can remove a product by ID`, () => {
 		ulysses.cart.remove(product.id)
 		expect(ulysses.cart.contents.length).toBe(0)
+	})
+	test(`Subtotal changes with product removal`, () => {
+		expect(ulysses.cart.subtotal).toBe(0)
 	})
 })
 
@@ -87,3 +90,9 @@ describe(`Cart events`, () => {
 		expect(passed).toBe(true)
 	})
 })
+
+// describe(`Checkout`, () => {
+// 	let ulysses = new Ulysses()
+
+// 	test(``)
+// })

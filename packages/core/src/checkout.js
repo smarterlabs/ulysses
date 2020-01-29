@@ -14,18 +14,21 @@ class Checkout {
 		ulysses.checkout = this
 		this.ulysses = ulysses
 		this.modifications = []
+		this.calculateTotals()
 
-		this.ulysses.triggerEventListeners(`checkout.init`)
+		this.ulysses.triggerEventListeners(`checkout.onInit`)
 	}
 	start(){
 		this.ulysses.cart.close()
 
 		// UI should respond to this event
-		this.ulysses.triggerEventListeners(`checkout.start`)
+		this.ulysses.triggerEventListeners(`checkout.onStart`)
 	}
 	addModification(mod){
 		const modification = new this.ulysses.Modification(this.ulysses, mod)
 		this.modifications.push(modification)
+		this.calculateTotals()
+		this.ulysses.triggerEventListeners(`checkout.onAddModification`, modification)
 		return modification
 	}
 	removeModification(modification) {
@@ -36,10 +39,26 @@ class Checkout {
 			return
 		}
 		this.modifications.splice(index, 1)
+		this.calculateTotals()
 		this.ulysses.triggerEventListeners(`checkout.onRemoveModification`, toRemove)
 	}
-	calculateTotal(){
-
+	calculateTotals(){
+		this.subtotal = this.ulysses.cart.subtotal
+		let total = this.subtotal
+		if(`taxTotal` in this){
+			total += this.taxTotal
+		}
+		if(`shippingTotal` in this){
+			total += this.shippingTotal
+		}
+		for(let mod of this.modifications){
+			if(typeof mod.value === `function`){
+				total += mod.value(this.ulysses)
+				continue
+			}
+			total += mod.value
+		}
+		this.total = total
 	}
 	getModification(id) {
 		if (typeof id == `object`) return id
