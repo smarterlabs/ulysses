@@ -91,8 +91,25 @@ describe(`Cart events`, () => {
 	})
 })
 
-// describe(`Checkout`, () => {
-// 	let ulysses = new Ulysses()
+describe(`Checkout`, () => {
+	let product = {
+		id: 1,
+		title: `Apple`,
+		price: 100,
+		quantity: 2,
+	}
+	const tax = 30
+	const modification = {
+		id: 1,
+		value: 350,
+	}
 
-// 	test(``)
-// })
+	let ulysses = new Ulysses()
+	ulysses.cart.add(product)
+	ulysses.checkout.setTax(tax)
+	ulysses.checkout.addModification(modification)
+
+	test(`Checkout total should be accurate`, () => {
+		expect(ulysses.checkout.total).toBe((product.price * product.quantity) + tax + modification.value)
+	})
+})

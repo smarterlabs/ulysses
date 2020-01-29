@@ -1,5 +1,6 @@
 import cart from './cart'
 import user from './user'
+import checkout from './checkout'
 
 export class Ulysses{
 	constructor({
@@ -13,6 +14,7 @@ export class Ulysses{
 			plugins.unshift(
 				cart(),
 				user(),
+				checkout(),
 			)
 		}
 

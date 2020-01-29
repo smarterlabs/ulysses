@@ -42,6 +42,11 @@ class Checkout {
 		this.calculateTotals()
 		this.ulysses.triggerEventListeners(`checkout.onRemoveModification`, toRemove)
 	}
+	setTax(tax){
+		this.taxTotal = tax
+		this.calculateTotals()
+		this.ulysses.triggerEventListeners(`checkout.onSetTax`)
+	}
 	calculateTotals(){
 		this.subtotal = this.ulysses.cart.subtotal
 		let total = this.subtotal
