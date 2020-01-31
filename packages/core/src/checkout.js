@@ -48,6 +48,9 @@ class Checkout {
 		this.calculateTotals()
 		this.ulysses.triggerEventListeners(`checkout.onSetTax`)
 	}
+	fetchShippingMethods(){
+		this.ulysses.triggerEventListeners(`checkout.onFetchShippingMethods`)
+	}
 	calculateTotals(){
 		this.subtotal = this.ulysses.cart.subtotal
 		let total = this.subtotal
