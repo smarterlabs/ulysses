@@ -103,13 +103,20 @@ describe(`Checkout`, () => {
 		id: 1,
 		value: 350,
 	}
+	const shipping = {
+		label: `Standard Shipping`,
+		value: 1000,
+		selected: true,
+	}
 
 	let ulysses = new Ulysses()
 	ulysses.cart.add(product)
 	ulysses.checkout.setTax(tax)
 	ulysses.checkout.addModification(modification)
+	ulysses.checkout.setShippingMethods([{ methods: [shipping]}])
 
 	test(`Checkout total should be accurate`, () => {
-		expect(ulysses.checkout.total).toBe((product.price * product.quantity) + tax + modification.value)
+		const total = (product.price * product.quantity) + tax + modification.value + shipping.value
+		expect(ulysses.checkout.total).toBe(total)
 	})
 })

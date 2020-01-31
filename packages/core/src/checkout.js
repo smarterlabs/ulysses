@@ -64,6 +64,13 @@ class Checkout {
 			}
 			total += mod.value
 		}
+		for(const group of this.shippingMethods){
+			for(const method of group.methods){
+				if(method.selected){
+					total += method.value
+				}
+			}
+		}
 		this.total = total
 	}
 	getModification(id) {
@@ -75,44 +82,22 @@ class Checkout {
 		}
 	}
 
-	setShippingOptions(options){
+	setShippingMethods(options){
 		if(!Array.isArray(options)){
 			options = [options]
 		}
 		this.shippingMethods.length = 0
 		for(let group of options){
-			this.shippingMethods.push(new ShippingMethodGroup(group))
+			this.shippingMethods.push(new ShippingMethodGroup(this.ulysses, group))
 		}
-	}
-	setShippingMethod(method){
-		method = this.getShippingMethod(method)
-		this.selectedShippingMethod = method
-	}
-	getShippingMethod(method) {
-		if (typeof method == `object`) return method
-		for (let item of this.shippingMethods) {
-			if (item.id === method) {
-				return item
-			}
-		}
+		this.calculateTotals()
+		this.ulysses.triggerEventListeners(`checkout.onSetShippingMethods`)
 	}
 }
 
-// const shippingOptions = [
-// 	{
-// 		name: `Product Group 1`,
-// 		methods: [
-// 			{
-// 				name: `Express Shipping`,
-// 				value: 200,
-// 			},
-// 		],
-// 	},
-// ]
-
 
 class ShippingMethodGroup{
-	constructor(ulysses, { methods, ...options }){
+	constructor(ulysses, { methods = [], ...options } = {}){
 		for(let i in options){
 			this[i] = options[i]
 		}
@@ -131,11 +116,13 @@ class ShippingMethodGroup{
 				method.selected = false
 			}
 		}
+		this.ulysses.checkout.calculateTotals()
 		this.ulysses.triggerEventListeners(`shipping.onShippingMethodChange`, selected)
 	}
 }
 class ShippingMethod{
 	constructor(ulysses, group, options) {
+		this.selected = false
 		for (let i in options) {
 			this[i] = options[i]
 		}
