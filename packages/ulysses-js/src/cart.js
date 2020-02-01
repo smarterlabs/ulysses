@@ -9,8 +9,8 @@ class Cart {
 		}
 		this.contents = options.contents || []
 		this.isOpen = options.isOpen || false
-		this.calculateSubtotal()
-		this.ulysses.addEventListener(`cart.onChange`, () => this.calculateSubtotal())
+		this.calculateTotals()
+		this.ulysses.addEventListener(`cart.onChange`, () => this.calculateTotals())
 		this.ulysses.triggerEventListeners(`cart.onInit`)
 	}
 	getProduct(id) {
@@ -21,12 +21,15 @@ class Cart {
 			}
 		}
 	}
-	calculateSubtotal() {
+	calculateTotals() {
 		let subtotal = 0
+		let totalQuantity = 0
 		for (let product of this.contents) {
 			subtotal += product.price * product.quantity
+			totalQuantity += product.quantity
 		}
 		this.subtotal = subtotal
+		this.totalQuantity = totalQuantity
 	}
 
 	async open(){
@@ -91,7 +94,7 @@ class Cart {
 		await this.handleChange(`clear`)
 	}
 	async handleChange(type) {
-		this.calculateSubtotal()
+		this.calculateTotals()
 		this.ulysses.triggerEventListeners(`cart.onChange`, this.contents, type)
 	}
 }

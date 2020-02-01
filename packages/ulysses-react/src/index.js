@@ -50,3 +50,10 @@ export const useSubtotal = createHook({
 	update: ({ cart }) => cart.subtotal,
 	expose: ({ cart }) => cart.subtotal,
 })
+
+export const useTotalQuantity = createHook({
+	event: `cart.onChange`,
+	initial: ({ cart }) => cart.totalQuantity,
+	update: ({ cart }) => cart.totalQuantity,
+	expose: ({ cart }) => cart.totalQuantity,
+})
