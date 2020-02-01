@@ -1,5 +1,5 @@
 import React from 'react'
-import { UlyssesReact, useCart, useCartContents } from '@smarterlabs/ulysses-react'
+import { UlyssesReact, useCart } from '@smarterlabs/ulysses-react'
 
 const WithUlysses = UlyssesReact()
 
@@ -17,8 +17,7 @@ const inventory = [
 ]
 
 function Page(){
-	const cart = useCart()
-	const contents = useCartContents()
+	const { cart, contents } = useCart()
 	return (
 		<main>
 			<section>
