@@ -1,15 +1,17 @@
 import React from 'react'
-import { useCartContents } from '@smarterlabs/ulysses-react'
+import { useCartIsOpen } from '@smarterlabs/ulysses-react'
+import ProductList from './product-list'
+import Backdrop from './backdrop'
 
 export default function UlyssesReactTheme(){
-	const contents = useCartContents()
+	const isOpen = useCartIsOpen()
 	return (
-		<div className='ulysses'>
-			<ul>
-				{contents.map((item, index) => (
-					<li key={index}>{item.name} x{item.quantity}</li>
-				))}
-			</ul>
+		<div className={`ulysses ${isOpen ? `ulyssesCartOpen` : `ulyssesCartClosed`}`}>
+			<Backdrop />
+			<div className='ulyssesCart'>
+				<ProductList />
+			</div>
+
 		</div>
 	)
 }

@@ -37,6 +37,13 @@ function createHook(options){
 	}
 }
 
+export const useCartIsOpen = createHook({
+	event: `cart.onToggle`,
+	initial: ({ cart }) => cart.isOpen,
+	update: ({ cart }) => cart.isOpen,
+	expose: ({ cart }) => cart.isOpen,
+})
+
 export const useCartContents = createHook({
 	event: `cart.onChange`,
 	initial: ({ cart }) => cart.contents,

@@ -1,4 +1,5 @@
 import { pluginWrapper } from './index'
+import bindThis from './bind-this'
 
 class Cart {
 	constructor(ulysses, options){
@@ -12,6 +13,16 @@ class Cart {
 		this.calculateTotals()
 		this.ulysses.addEventListener(`cart.onChange`, () => this.calculateTotals())
 		this.ulysses.triggerEventListeners(`cart.onInit`)
+
+		bindThis(this, [
+			`open`,
+			`close`,
+			`toggle`,
+			`add`,
+			`remove`,
+			`clear`,
+			`handleChange`,
+		])
 	}
 	getProduct(id) {
 		if (typeof id == `object`) return id

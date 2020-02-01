@@ -5,9 +5,13 @@
   "license": "MIT",
   "main": "dist/index.js",
   "scripts": {
-    "build": "yarn run clean && babel src --out-dir dist",
+    "build": "yarn run clean && concurrently yarn:build:*",
+    "build:react": "babel src --out-dir dist",
+    "build:sass": "node-sass src -o dist",
     "clean": "del dist",
-    "dev": "babel src --watch --out-dir dist",
+    "dev": "concurrently --kill-others yarn:dev:*",
+    "dev:react": "babel src --watch --out-dir dist",
+    "dev:sass": "node-sass --watch src -o dist",
     "test": "yarn run build && jest"
   },
   "peerDependencies": {
@@ -17,5 +21,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.8.4"
+  },
+  "devDependencies": {
+    "concurrently": "^5.1.0",
+    "node-sass": "^4.13.1"
   }
 }
