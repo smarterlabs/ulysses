@@ -30,6 +30,11 @@ function Page(){
 					<button key={index} onClick={() => cart.add(item)}>Add {item.name}</button>
 				))}
 			</section>
+			<section>
+				{inventory.map((item, index) => (
+					<button key={index} onClick={() => cart.remove(item.id)}>Remove {item.name}</button>
+				))}
+			</section>
 			<ul>
 				{contents.map((item, index) => (
 					<li key={index}>{item.name} x{item.quantity}</li>
