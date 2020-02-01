@@ -7,8 +7,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build": "lerna run build --stream",
-    "dev": "lerna run dev --stream",
+    "build": "lerna run build --stream --scope @smarterlabs/*",
+    "dev": "yarn run build && lerna run dev --stream --no-sort",
     "dev:core": "cd packages/core && yarn dev",
     "dev:sandbox": "cd packages/sandbox && yarn dev",
     "lint": "eslint ./",

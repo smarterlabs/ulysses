@@ -2,7 +2,9 @@
 	"presets": [
 		["@smarterlabs/babel-preset", {
 			"modules": "auto",
-			"targets": "> 0.25%, not dead"
+			"targets": {
+				"node": "12"
+			}
 		}]
 	]
 }

@@ -7,7 +7,7 @@
   "scripts": {
     "build": "yarn run clean && babel src --out-dir dist",
     "clean": "del dist",
-    "dev": "yarn run build && babel src --watch --out-dir dist",
+    "dev": "babel src --watch --out-dir dist",
     "test": "yarn run build && jest"
   },
   "peerDependencies": {
