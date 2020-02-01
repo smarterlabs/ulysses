@@ -34,12 +34,12 @@ class User {
 			this.paymentMethods = []
 		}
 
-		this.ulysses.triggerEventListeners(`user.init`)
+		this.ulysses.triggerEventListeners(`user.onInit`)
 	}
 	async addAddress(obj){
 		const address = new this.ulysses.Address(this.ulysses, obj)
 		this.addresses.push(address)
-		this.ulysses.triggerEventListeners(`user.addAddress`)
+		this.ulysses.triggerEventListeners(`user.onAddAddress`)
 		return address
 	}
 	async removeAddress(address) {
@@ -48,12 +48,12 @@ class User {
 		if (index > -1) {
 			this.addresses.splice(index, 1)
 		}
-		this.ulysses.triggerEventListeners(`user.removeAddress`)
+		this.ulysses.triggerEventListeners(`user.onRemoveAddress`)
 	}
 	async addPaymentMethod(obj){
 		const paymentMethod = new this.ulysses.PaymentMethod(this.ulysses, obj)
 		this.paymentMethods.push(paymentMethod)
-		this.ulysses.triggerEventListeners(`user.addPaymentMethod`)
+		this.ulysses.triggerEventListeners(`user.onAddPaymentMethod`)
 		return paymentMethod
 	}
 	async removePaymentMethod(paymentMethod) {
@@ -62,7 +62,7 @@ class User {
 		if (index > -1) {
 			this.paymentMethods.splice(index, 1)
 		}
-		this.ulysses.triggerEventListeners(`user.removePaymentMethod`)
+		this.ulysses.triggerEventListeners(`user.onRemovePaymentMethod`)
 	}
 	getPaymentMethod(id) {
 		if (typeof id == `object`) return id

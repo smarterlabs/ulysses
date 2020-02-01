@@ -1,0 +1,21 @@
+{
+  "name": "@smarterlabs/ulysses-react-theme",
+  "version": "0.0.0",
+  "author": "Kennedy Rose <kennedyianrose@gmail.com>",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "yarn run clean && babel src --out-dir dist",
+    "clean": "del dist",
+    "dev": "babel src --watch --out-dir dist",
+    "test": "yarn run build && jest"
+  },
+  "peerDependencies": {
+    "@smarterlabs/ulysses-js": "*",
+    "@smarterlabs/ulysses-react": "*",
+    "react": "^16.4.2"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.8.4"
+  }
+}

@@ -1,5 +1,6 @@
 import React from 'react'
-import { UlyssesReact, useCartContents, useUlysses, useSubtotal, useTotalQuantity } from '@smarterlabs/ulysses-react'
+import { UlyssesReact, useUlysses, useSubtotal, useTotalQuantity } from '@smarterlabs/ulysses-react'
+import Theme from '@smarterlabs/ulysses-react-theme'
 
 const WithUlysses = UlyssesReact()
 
@@ -20,7 +21,6 @@ const inventory = [
 
 function Page(){
 	const { cart } = useUlysses()
-	const contents = useCartContents()
 	const subtotal = useSubtotal()
 	const totalQuantity = useTotalQuantity()
 	return (
@@ -35,11 +35,7 @@ function Page(){
 					<button key={index} onClick={() => cart.remove(item.id)}>Remove {item.name}</button>
 				))}
 			</section>
-			<ul>
-				{contents.map((item, index) => (
-					<li key={index}>{item.name} x{item.quantity}</li>
-				))}
-			</ul>
+			<Theme />
 			<div>Total Quantity: x{totalQuantity}</div>
 			<div>Subtotal: {subtotal}</div>
 		</main>
