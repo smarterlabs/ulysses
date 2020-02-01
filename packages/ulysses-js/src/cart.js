@@ -9,6 +9,7 @@ class Cart {
 		}
 		this.contents = options.contents || []
 		this.isOpen = options.isOpen || false
+		this.calculateSubtotal()
 		this.ulysses.addEventListener(`cart.onChange`, () => this.calculateSubtotal())
 		this.ulysses.triggerEventListeners(`cart.onInit`)
 	}

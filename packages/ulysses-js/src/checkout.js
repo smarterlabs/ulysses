@@ -23,14 +23,14 @@ class Checkout {
 		this.ulysses.cart.close()
 		this.ulysses.triggerEventListeners(`checkout.onStart`)
 	}
-	addModification(mod){
+	async addModification(mod){
 		const modification = new this.ulysses.Modification(this.ulysses, mod)
 		this.modifications.push(modification)
 		this.calculateTotals()
 		this.ulysses.triggerEventListeners(`checkout.onAddModification`, modification)
 		return modification
 	}
-	removeModification(modification) {
+	async removeModification(modification) {
 		const toRemove = this.getModification(modification)
 		const index = this.modifications.indexOf(toRemove)
 		if (index === -1) {

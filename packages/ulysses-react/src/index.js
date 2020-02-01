@@ -19,21 +19,34 @@ export function useUlysses(){
 	return useContext(Context)
 }
 
-export function useCart(){
-	const ulysses = useContext(Context)
-	const { cart } = ulysses
-	const [contents, setContents] = useState(cart.contents)
-	function onChange(contents){
-		setContents([...contents])
-	}
-	useEffect(() => {
-		if(typeof window === undefined) return
-		ulysses.addEventListener(`cart.onChange`, onChange)
-		return () => ulysses.removeEventListener(`cart.onChange`, onChange)
-	}, [])
-	return {
-		cart,
-		contents,
-		subtotal: cart.subtotal,
+function createHook(options){
+	let { event, initial, update, expose } = options
+	if (!update) update = initial
+	return () => {
+		const ulysses = useUlysses()
+		const [contents, setContents] = useState(initial(ulysses))
+		function onChange() {
+			setContents(update(ulysses))
+		}
+		useEffect(() => {
+			if (typeof window === undefined) return
+			ulysses.addEventListener(event, onChange)
+			return () => ulysses.removeEventListener(event, onChange)
+		}, [])
+		return expose(ulysses, contents)
 	}
 }
+
+export const useCartContents = createHook({
+	event: `cart.onChange`,
+	initial: ({ cart }) => cart.contents,
+	update: ({ cart }) => [...cart.contents],
+	expose: ({ cart }) => cart.contents,
+})
+
+export const useSubtotal = createHook({
+	event: `cart.onChange`,
+	initial: ({ cart }) => cart.subtotal,
+	update: ({ cart }) => cart.subtotal,
+	expose: ({ cart }) => cart.subtotal,
+})

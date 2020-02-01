@@ -1,5 +1,5 @@
 import React from 'react'
-import { UlyssesReact, useCart } from '@smarterlabs/ulysses-react'
+import { UlyssesReact, useCartContents, useUlysses, useSubtotal } from '@smarterlabs/ulysses-react'
 
 const WithUlysses = UlyssesReact()
 
@@ -8,16 +8,20 @@ const inventory = [
 		name: `Apple`,
 		id: `A123`,
 		totalQuantity: 5,
+		price: 100,
 	},
 	{
 		name: `Banana`,
 		id: `B123`,
 		totalQuantity: 5,
+		price: 80,
 	},
 ]
 
 function Page(){
-	const { cart, contents } = useCart()
+	const { cart } = useUlysses()
+	const contents = useCartContents()
+	const subtotal = useSubtotal()
 	return (
 		<main>
 			<section>
@@ -30,6 +34,7 @@ function Page(){
 					<li key={index}>{item.name} x{item.quantity}</li>
 				))}
 			</ul>
+			<div>Subtotal: {subtotal}</div>
 		</main>
 	)
 }
