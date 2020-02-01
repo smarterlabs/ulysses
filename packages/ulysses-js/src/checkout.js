@@ -21,8 +21,6 @@ class Checkout {
 	}
 	start(){
 		this.ulysses.cart.close()
-
-		// UI should respond to this event
 		this.ulysses.triggerEventListeners(`checkout.onStart`)
 	}
 	addModification(mod){
@@ -43,12 +41,12 @@ class Checkout {
 		this.calculateTotals()
 		this.ulysses.triggerEventListeners(`checkout.onRemoveModification`, toRemove)
 	}
-	setTax(tax){
-		this.taxTotal = tax
-		this.calculateTotals()
-		this.ulysses.triggerEventListeners(`checkout.onSetTax`)
+	async fetchTax() {
+		await this.ulysses.triggerEventHooks(`checkout.onFetchTax`)
+		this.ulysses.triggerEventListeners(`checkout.onFetchTax`)
 	}
-	fetchShippingMethods(){
+	async fetchShippingMethods(){
+		await this.ulysses.triggerEventHooks(`checkout.onFetchShippingMethods`)
 		this.ulysses.triggerEventListeners(`checkout.onFetchShippingMethods`)
 	}
 	calculateTotals(){
@@ -95,6 +93,11 @@ class Checkout {
 		}
 		this.calculateTotals()
 		this.ulysses.triggerEventListeners(`checkout.onSetShippingMethods`)
+	}
+	setTax(tax) {
+		this.taxTotal = tax
+		this.calculateTotals()
+		this.ulysses.triggerEventListeners(`checkout.onSetTax`)
 	}
 }
 

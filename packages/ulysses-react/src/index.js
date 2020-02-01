@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { Ulysses } from '../../../core/src'
+import { Ulysses } from '@smarterlabs/ulysses-js'
 
 export const Context = React.createContext()
 
@@ -20,8 +20,8 @@ export function useUlysses(){
 }
 
 export function useCart(){
-	const { cart } = ulysses
 	const ulysses = useContext(Context)
+	const { cart } = ulysses
 	const [contents, setContents] = useState(cart.contents)
 	function onChange(contents){
 		setContents([...contents])

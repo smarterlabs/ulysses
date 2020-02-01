@@ -1,5 +1,5 @@
 import React from 'react'
-import { UlyssesReact, useCart, useCartContents } from '../react-ulysses'
+import { UlyssesReact, useCart, useCartContents } from '@smarterlabs/ulysses-react'
 
 const WithUlysses = UlyssesReact()
 
