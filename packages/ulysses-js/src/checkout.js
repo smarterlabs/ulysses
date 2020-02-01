@@ -83,7 +83,7 @@ class Checkout {
 		}
 	}
 
-	setShippingMethods(options){
+	async setShippingMethods(options){
 		if(!Array.isArray(options)){
 			options = [options]
 		}
@@ -94,7 +94,7 @@ class Checkout {
 		this.calculateTotals()
 		this.ulysses.triggerEventListeners(`checkout.onSetShippingMethods`)
 	}
-	setTax(tax) {
+	async setTax(tax) {
 		this.taxTotal = tax
 		this.calculateTotals()
 		this.ulysses.triggerEventListeners(`checkout.onSetTax`)

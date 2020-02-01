@@ -12,19 +12,35 @@ class Cart {
 		this.ulysses.addEventListener(`cart.onChange`, () => this.calculateSubtotal())
 		this.ulysses.triggerEventListeners(`cart.onInit`)
 	}
-	open(){
+	getProduct(id) {
+		if (typeof id == `object`) return id
+		for (let product of this.contents) {
+			if (product.id === id) {
+				return product
+			}
+		}
+	}
+	calculateSubtotal() {
+		let subtotal = 0
+		for (let product of this.contents) {
+			subtotal += product.price * product.quantity
+		}
+		this.subtotal = subtotal
+	}
+
+	async open(){
 		this.isOpen = true
 		this.ulysses.triggerEventListeners([`cart.onOpen`, `cart.onToggle`])
 	}
-	close() {
+	async close() {
 		this.isOpen = false
 		this.ulysses.triggerEventListeners([`cart.onClose`, `cart.onToggle`])
 	}
-	toggle() {
+	async toggle() {
 		this.isOpen = !this.isOpen
 		this.ulysses.triggerEventListeners(`cart.onToggle`)
 	}
-	add(product) {
+	async add(product) {
 		// Create copy so we don't alter the original for future adds
 		product = {...product}
 
@@ -55,9 +71,9 @@ class Cart {
 		}
 
 		this.ulysses.triggerEventListeners(`cart.onAdd`, product)
-		this.handleChange(`add`)
+		await this.handleChange(`add`)
 	}
-	remove(product) {
+	async remove(product) {
 		const productToRemove = this.getProduct(product)
 		const index = this.contents.indexOf(productToRemove)
 		if (index === -1) {
@@ -66,29 +82,14 @@ class Cart {
 		}
 		this.contents.splice(index, 1)
 		this.ulysses.triggerEventListeners(`cart.onRemove`, productToRemove)
-		this.handleChange(`remove`)
+		await this.handleChange(`remove`)
 	}
-	clear() {
+	async clear() {
 		this.contents.length = 0
 		this.ulysses.triggerEventListeners(`cart.onClear`)
-		this.handleChange(`clear`)
+		await this.handleChange(`clear`)
 	}
-	getProduct(id){
-		if(typeof id == `object`) return id
-		for (let product of this.contents){
-			if(product.id === id){
-				return product
-			}
-		}
-	}
-	calculateSubtotal(){
-		let subtotal = 0
-		for(let product of this.contents){
-			subtotal += product.price * product.quantity
-		}
-		this.subtotal = subtotal
-	}
-	handleChange(type){
+	async handleChange(type) {
 		this.calculateSubtotal()
 		this.ulysses.triggerEventListeners(`cart.onChange`, this.contents, type)
 	}
@@ -105,8 +106,8 @@ class Product {
 			this[key] = product[key]
 		}
 	}
-	remove() {
-		this.ulysses.cart.remove(this)
+	async remove() {
+		await this.ulysses.cart.remove(this)
 	}
 }
 
