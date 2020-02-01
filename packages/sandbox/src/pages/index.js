@@ -1,9 +1,8 @@
 import React from 'react'
-import { UlyssesReact, useUlysses, useSubtotal, useTotalQuantity } from '@smarterlabs/ulysses-react'
+import { useUlysses, useSubtotal, useTotalQuantity } from '@smarterlabs/ulysses-react'
 import Theme from '@smarterlabs/ulysses-react-theme'
 import '@smarterlabs/ulysses-react-theme/dist/style.css'
 
-const WithUlysses = UlyssesReact()
 
 const inventory = [
 	{
@@ -20,7 +19,7 @@ const inventory = [
 	},
 ]
 
-function Page(){
+export default function Page(){
 	const { cart } = useUlysses()
 	const subtotal = useSubtotal()
 	const totalQuantity = useTotalQuantity()
@@ -43,14 +42,5 @@ function Page(){
 			<div>Total Quantity: x{totalQuantity}</div>
 			<div>Subtotal: {subtotal}</div>
 		</main>
-	)
-}
-
-export default () => {
-
-	return (
-		<WithUlysses>
-			<Page />
-		</WithUlysses>
 	)
 }
