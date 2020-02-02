@@ -56,18 +56,14 @@ class Cart {
 		this.ulysses.triggerEventListeners(`cart.onToggle`)
 	}
 	async add(product) {
-		// Create copy so we don't alter the original for future adds
-		product = {...product}
+
+		product = new Product(this.ulysses, product)
 
 		// Correct quantity
 		if(!(`quantity` in product)){
 			product.quantity = 1
 		}
 
-		// Error if ID is missing
-		if(!(`id` in product)){
-			console.error(`Product needs an "id" property`)
-		}
 
 		// Check if product is already in cart
 		const productInCart = this.getProduct(product.id)
@@ -92,7 +88,7 @@ class Cart {
 		const productToRemove = this.getProduct(product)
 		const index = this.contents.indexOf(productToRemove)
 		if (index === -1) {
-			console.error(`Product not found:`, productToRemove)
+			console.error(`Product not found:`, product)
 			return
 		}
 		this.contents.splice(index, 1)
@@ -120,8 +116,11 @@ class Product {
 		for (let key in product) {
 			this[key] = product[key]
 		}
+
+		this.remove = this.remove.bind(this)
 	}
 	async remove() {
+		console.log(`Remove!`)
 		await this.ulysses.cart.remove(this)
 	}
 }

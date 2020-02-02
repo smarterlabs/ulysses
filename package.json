@@ -8,7 +8,8 @@
   "private": true,
   "scripts": {
     "build": "lerna run build --stream --scope @smarterlabs/*",
-    "dev": "yarn run build && lerna run dev --stream --no-sort",
+    "clean": "lerna run clean --stream --no-sort",
+    "dev": "yarn run build && lerna run dev --parallel --stream --no-sort",
     "dev:core": "cd packages/core && yarn dev",
     "dev:sandbox": "cd packages/sandbox && yarn dev",
     "lint": "eslint ./",
