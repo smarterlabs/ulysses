@@ -3,6 +3,11 @@ import { useCartContents } from '@smarterlabs/ulysses-react'
 
 export default function UlyssesProductList(){
 	const contents = useCartContents()
+	if(!contents.length){
+		return(
+			<div className='ulyssesCartEmpty'>Your cart is empty!</div>
+		)
+	}
 	return (
 		<ul className='ulyssesProductList'>
 			{contents.map((item, index) => (
@@ -10,7 +15,6 @@ export default function UlyssesProductList(){
 					<div>{item.name}</div>
 					<div>x{item.quantity}</div>
 					<div>
-						{console.log(item)}
 						<button onClick={item.remove}>X</button>
 					</div>
 				</li>

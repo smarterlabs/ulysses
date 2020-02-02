@@ -117,11 +117,19 @@ class Product {
 			this[key] = product[key]
 		}
 
-		this.remove = this.remove.bind(this)
+		bindThis(this, [
+			`remove`,
+			`update`,
+		])
 	}
 	async remove() {
-		console.log(`Remove!`)
 		await this.ulysses.cart.remove(this)
+	}
+	async update(obj){
+		for(let key in obj){
+			this[key] = obj[key]
+		}
+		await this.ulysses.cart.handleChange(`update`)
 	}
 }
 
