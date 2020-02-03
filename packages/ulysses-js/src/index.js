@@ -1,7 +1,9 @@
+import cloneDeep from 'clone-deep'
 import cart from './cart'
 import user from './user'
 import checkout from './checkout'
 import openOnAdd from './open-on-add'
+import bindThis from './bind-this'
 
 export class Ulysses{
 	constructor({
@@ -10,6 +12,7 @@ export class Ulysses{
 	} = {}) {
 		this.eventListeners = {}
 		this.eventHooks = {}
+		this.shared = {}
 
 		// Add default plugins
 		if(noPlugins === false){
@@ -26,10 +29,18 @@ export class Ulysses{
 			initPlugin(this)
 		})
 
-		// Keep "this"
-		this.addEventListener = this.addEventListener.bind(this)
-		this.removeEventListener = this.removeEventListener.bind(this)
-		this.triggerEventListeners = this.triggerEventListeners.bind(this)
+		bindThis(this, [
+			`addEventListener`,
+			`removeEventListener`,
+			`triggerEventListeners`,
+		])
+	}
+
+	setShared(obj, ...args){
+		this.shared = {
+			...cloneDeep(obj),
+		}
+		this.triggerEventListeners(`onSetShared`, this.shared, ...args)
 	}
 
 	// Event Listeners
