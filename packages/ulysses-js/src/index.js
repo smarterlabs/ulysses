@@ -9,10 +9,11 @@ export class Ulysses{
 	constructor({
 		noPlugins = false,
 		plugins = [],
+		shared = {},
 	} = {}) {
 		this.eventListeners = {}
 		this.eventHooks = {}
-		this.shared = {}
+		this.setShared(shared)
 
 		// Add default plugins
 		if(noPlugins === false){
