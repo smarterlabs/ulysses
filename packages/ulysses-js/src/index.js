@@ -1,6 +1,7 @@
 import cart from './cart'
 import user from './user'
 import checkout from './checkout'
+import openOnAdd from './open-on-add'
 
 export class Ulysses{
 	constructor({
@@ -16,6 +17,7 @@ export class Ulysses{
 				cart(),
 				user(),
 				checkout(),
+				openOnAdd(),
 			)
 		}
 
