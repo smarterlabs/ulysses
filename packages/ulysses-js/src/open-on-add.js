@@ -2,7 +2,7 @@ import { pluginWrapper } from './index'
 
 class OpenOnAdd {
 	constructor(ulysses){
-		ulysses.addEventListener(`cart.onChange`, ulysses.cart.open)
+		ulysses.addEventListener(`cart.onAdd`, ulysses.cart.open)
 	}
 }
 

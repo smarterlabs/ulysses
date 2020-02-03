@@ -30,17 +30,23 @@ export class Ulysses{
 		})
 
 		bindThis(this, [
+			`setShared`,
 			`addEventListener`,
 			`removeEventListener`,
 			`triggerEventListeners`,
 		])
 	}
 
-	setShared(obj, ...args){
+	setShared(obj){
 		this.shared = {
+			...this.shared,
 			...cloneDeep(obj),
 		}
-		this.triggerEventListeners(`onSetShared`, this.shared, ...args)
+		this.triggerEventListeners(`onSetShared`, this.shared)
+	}
+	loadShared(obj){
+		this.shared = cloneDeep(obj)
+		this.triggerEventListeners(`onLoadShared`, this.shared)
 	}
 
 	// Event Listeners
