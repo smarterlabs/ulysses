@@ -115,13 +115,17 @@ class Cart {
 		this.ulysses.triggerEventListeners(`cart.onChange`, this.contents, type)
 	}
 
-	saveState(){
-		const contents = this.contents.map(product => product.toObject())
-		Cookies.set(`cart.contents`, JSON.stringify(contents))
+	toObject(){
+		return this.contents.map(product => product.toObject())
 	}
-	loadState(){
-		let contents = Cookies.get(`cart.contents`)
-		contents = JSON.parse(contents)
+	saveState(){
+		Cookies.set(`cart.contents`, JSON.stringify(this.toObject()))
+	}
+	loadState(contents){
+		if (!contents) {
+			contents = Cookies.get(`cart.contents`)
+			contents = JSON.parse(contents)
+		}
 		this.add(contents)
 	}
 }
