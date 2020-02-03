@@ -1,5 +1,7 @@
+import Cookies from 'js-cookie'
 import { pluginWrapper } from './index'
 import bindThis from './bind-this'
+import Product from './product'
 
 class Cart {
 	constructor(ulysses, options){
@@ -11,7 +13,7 @@ class Cart {
 		this.contents = options.contents || []
 		this.isOpen = options.isOpen || false
 		this.calculateTotals()
-		this.ulysses.addEventListener(`cart.onChange`, () => this.calculateTotals())
+		this.loadState()
 		this.ulysses.triggerEventListeners(`cart.onInit`)
 
 		bindThis(this, [
@@ -22,6 +24,8 @@ class Cart {
 			`remove`,
 			`clear`,
 			`handleChange`,
+			`saveState`,
+			`loadState`,
 		])
 	}
 	getProduct(id) {
@@ -55,33 +59,38 @@ class Cart {
 		this.isOpen = !this.isOpen
 		this.ulysses.triggerEventListeners(`cart.onToggle`)
 	}
-	async add(product) {
+	async add(products) {
+		if(!Array.isArray(products)){
+			products = [products]
+		}
+		for(let product of products){
 
-		product = new Product(this.ulysses, product)
+			product = new Product(this.ulysses, product)
 
-		// Correct quantity
-		if(!(`quantity` in product)){
-			product.quantity = 1
+			// Correct quantity
+			if (!(`quantity` in product)) {
+				product.quantity = 1
+			}
+
+
+			// Check if product is already in cart
+			const productInCart = this.getProduct(product.id)
+			if (productInCart) {
+				product.quantity += productInCart.quantity
+				const index = this.contents.indexOf(productInCart)
+				this.contents[index] = product
+			}
+			else {
+				this.contents.push(product)
+			}
+
+			// Limit quantity
+			if (product.quantity > product.totalQuantity) {
+				product.quantity = product.totalQuantity
+			}
 		}
 
-
-		// Check if product is already in cart
-		const productInCart = this.getProduct(product.id)
-		if(productInCart){
-			product.quantity += productInCart.quantity
-			const index = this.contents.indexOf(productInCart)
-			this.contents[index] = product
-		}
-		else {
-			this.contents.push(product)
-		}
-
-		// Limit quantity
-		if (product.quantity > product.totalQuantity) {
-			product.quantity = product.totalQuantity
-		}
-
-		this.ulysses.triggerEventListeners(`cart.onAdd`, product)
+		this.ulysses.triggerEventListeners(`cart.onAdd`, products)
 		await this.handleChange(`add`)
 	}
 	async remove(product) {
@@ -102,34 +111,18 @@ class Cart {
 	}
 	async handleChange(type) {
 		this.calculateTotals()
+		this.saveState()
 		this.ulysses.triggerEventListeners(`cart.onChange`, this.contents, type)
 	}
-}
 
-class Product {
-	constructor(ulysses, product) {
-		if (!(`id` in product)) {
-			console.error(`Product needs an "id" property`)
-		}
-
-		this.ulysses = ulysses
-		for (let key in product) {
-			this[key] = product[key]
-		}
-
-		bindThis(this, [
-			`remove`,
-			`update`,
-		])
+	saveState(){
+		const contents = this.contents.map(product => product.toObject())
+		Cookies.set(`cart.contents`, JSON.stringify(contents))
 	}
-	async remove() {
-		await this.ulysses.cart.remove(this)
-	}
-	async update(obj){
-		for(let key in obj){
-			this[key] = obj[key]
-		}
-		await this.ulysses.cart.handleChange(`update`)
+	loadState(){
+		let contents = Cookies.get(`cart.contents`)
+		contents = JSON.parse(contents)
+		this.add(contents)
 	}
 }
 
