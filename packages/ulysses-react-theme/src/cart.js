@@ -6,7 +6,7 @@ import formatUsd from './format-usd'
 export default function UlyssesReactTheme() {
 	const contents = useCartContents()
 	const subtotal = useSubtotal()
-	const { cart } = useUlysses()
+	const { checkout, cart } = useUlysses()
 	return (
 		<div className='ulyssesCart'>
 			<button className='ulyssesClose' onClick={cart.close}>X</button>
@@ -17,6 +17,9 @@ export default function UlyssesReactTheme() {
 				<>
 					<ProductList />
 					<div>Subtotal: {formatUsd(subtotal)}</div>
+					<div>
+						<button onClick={checkout.start}>Checkout</button>
+					</div>
 				</>
 			)}
 		</div>

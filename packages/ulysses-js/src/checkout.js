@@ -1,4 +1,5 @@
 import { pluginWrapper } from './index'
+import bindThis from './bind-this'
 
 class Checkout {
 	constructor(ulysses, options) {
@@ -16,6 +17,16 @@ class Checkout {
 		this.modifications = []
 		this.shippingMethods = []
 		this.calculateTotals()
+
+		bindThis(this, [
+			`start`,
+			`addModification`,
+			`removeModification`,
+			`fetchTax`,
+			`fetchShippingMethods`,
+			`setShippingMethods`,
+			`setTax`,
+		])
 
 		this.ulysses.triggerEventListeners(`checkout.onInit`)
 	}
