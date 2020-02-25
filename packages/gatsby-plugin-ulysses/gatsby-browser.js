@@ -1,18 +1,5 @@
-import React from 'react'
-import {Ulysses} from '@smarterlabs/ulysses-js'
-import reactPlugin from '@smarterlabs/ulysses-plugin-react'
+import fn from './index'
 
-export function wrapRootElement({ element }, { plugins, ...options }) {
-	const ulysses = new Ulysses({
-		...options,
-		plugins: [
-			reactPlugin(),
-			...plugins,
-		],
-	})
-	return (
-		<ulysses.react.UlyssesProvider>
-			{element}
-		</ulysses.react.UlyssesProvider>
-	)
+export function wrapRootElement(...args) {
+	return fn(...args)
 }

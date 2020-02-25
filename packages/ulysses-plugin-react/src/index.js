@@ -5,6 +5,13 @@ import { pluginWrapper } from '@smarterlabs/ulysses-js'
 export const Context = React.createContext()
 
 
+export function UlyssesProvider({ ulysses, children }) {
+	return (
+		<Context.Provider value={ulysses}>
+			{children}
+		</Context.Provider>
+	)
+}
 
 class UlyssesReactPlugin {
 
@@ -21,6 +28,12 @@ class UlyssesReactPlugin {
 
 		ulysses.react = {
 			UlyssesProvider,
+			Context,
+			useUlysses,
+			useCartIsOpen,
+			useCartContents,
+			useSubtotal,
+			useTotalQuantity,
 		}
 	}
 }

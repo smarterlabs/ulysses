@@ -1,8 +1,6 @@
 import React from 'react'
 import { useUlysses, useSubtotal, useTotalQuantity } from '@smarterlabs/ulysses-plugin-react'
-import Theme from '@smarterlabs/ulysses-react-theme'
 import '@smarterlabs/ulysses-react-theme/dist/style.css'
-
 
 const inventory = [
 	{
@@ -38,7 +36,6 @@ export default function Page() {
 					<button key={index} onClick={() => cart.remove(item.id)}>Remove {item.name}</button>
 				))}
 			</section>
-			<Theme />
 			<div>Total Quantity: x{totalQuantity}</div>
 			<div>Subtotal: {subtotal}</div>
 		</main>
