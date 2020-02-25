@@ -9,7 +9,7 @@
   },
   "peerDependencies": {
     "react": "^16.4.2",
-    "@smarterlabs/ulysses-react": "*",
+    "@smarterlabs/ulysses-plugin-react": "*",
     "@smarterlabs/ulysses-react-theme": "*"
   },
   "dependencies": {

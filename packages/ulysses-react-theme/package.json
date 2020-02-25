@@ -16,7 +16,7 @@
   },
   "peerDependencies": {
     "@smarterlabs/ulysses-js": "*",
-    "@smarterlabs/ulysses-react": "*",
+    "@smarterlabs/ulysses-plugin-react": "*",
     "react": "^16.4.2"
   },
   "dependencies": {

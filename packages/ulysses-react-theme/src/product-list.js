@@ -1,5 +1,5 @@
 import React from 'react'
-import { useCartContents } from '@smarterlabs/ulysses-react'
+import { useCartContents } from '@smarterlabs/ulysses-plugin-react'
 
 export default function UlyssesProductList(){
 	const contents = useCartContents()

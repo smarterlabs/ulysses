@@ -1,12 +1,18 @@
 import React from 'react'
-import { UlyssesReact } from '@smarterlabs/ulysses-react'
+import {Ulysses} from '@smarterlabs/ulysses-js'
+import reactPlugin from '@smarterlabs/ulysses-plugin-react'
 
-const UlyssesProvider = new UlyssesReact()
-
-export function wrapRootElement({ element }) {
+export function wrapRootElement({ element }, { plugins, ...options }) {
+	const ulysses = new Ulysses({
+		...options,
+		plugins: [
+			reactPlugin(),
+			...plugins,
+		],
+	})
 	return (
-		<UlyssesProvider>
+		<ulysses.react.UlyssesProvider>
 			{element}
-		</UlyssesProvider>
+		</ulysses.react.UlyssesProvider>
 	)
 }

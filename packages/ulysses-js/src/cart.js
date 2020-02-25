@@ -122,9 +122,15 @@ class Cart {
 		Cookies.set(`cart.contents`, JSON.stringify(this.toObject()))
 	}
 	loadState(contents){
-		if (!contents) {
-			contents = Cookies.get(`cart.contents`)
-			contents = JSON.parse(contents)
+		try {
+			if (!contents) {
+				contents = Cookies.get(`cart.contents`)
+				contents = JSON.parse(contents)
+			}
+		}
+		catch(err){
+			console.error(err)
+			return
 		}
 		this.add(contents)
 	}

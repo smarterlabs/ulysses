@@ -1,23 +1,40 @@
 import React, { useContext, useState, useEffect } from 'react'
-import { Ulysses } from '@smarterlabs/ulysses-js'
+import { pluginWrapper } from '@smarterlabs/ulysses-js'
+
 
 export const Context = React.createContext()
 
-export function UlyssesReact(options){
-	const ulysses = new Ulysses(options)
 
-	return function UlyssesProvider({ children }){
-		return (
-			<Context.Provider value={ulysses}>
-				{children}
-			</Context.Provider>
-		)
+
+class UlyssesReactPlugin {
+
+	constructor(ulysses) {
+
+		function UlyssesProvider({ children }) {
+			return (
+				<Context.Provider value={ulysses}>
+					{children}
+				</Context.Provider>
+			)
+		}
+
+
+		ulysses.react = {
+			UlyssesProvider,
+		}
 	}
 }
 
-export function useUlysses(){
+export default pluginWrapper(UlyssesReactPlugin)
+
+
+
+export function useUlysses() {
 	return useContext(Context)
 }
+
+
+
 
 function createHook(options){
 	let { event, initial, update, expose } = options

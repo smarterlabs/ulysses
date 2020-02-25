@@ -1,5 +1,5 @@
 import React from 'react'
-import { useUlysses, useCartContents, useSubtotal } from '@smarterlabs/ulysses-react'
+import { useUlysses, useCartContents, useSubtotal } from '@smarterlabs/ulysses-plugin-react'
 import ProductList from './product-list'
 import formatUsd from './format-usd'
 

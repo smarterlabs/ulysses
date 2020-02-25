@@ -1,5 +1,5 @@
 import React from 'react'
-import { useCartIsOpen } from '@smarterlabs/ulysses-react'
+import { useCartIsOpen } from '@smarterlabs/ulysses-plugin-react'
 import Backdrop from './backdrop'
 import Cart from './cart'
 
