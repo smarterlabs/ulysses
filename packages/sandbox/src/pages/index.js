@@ -1,43 +1,70 @@
 import React from 'react'
-import { useUlysses, useSubtotal, useTotalQuantity } from '@smarterlabs/ulysses-plugin-react'
-import '@smarterlabs/ulysses-react-theme/dist/style.css'
+import UlyssesProvider from '@smarterlabs/ulysses/provider'
+import UlyssesPluginShopify from '@smarterlabs/ulysses-plugin-shopify'
+import useUlysses from '@smarterlabs/ulysses/use-ulysses'
+import useAddToCart from '@smarterlabs/ulysses/use-add-to-cart'
+import useUpdateQuantity from '@smarterlabs/ulysses/use-update-quantity'
 
-const inventory = [
-	{
-		name: `Apple`,
-		id: `A123`,
-		totalQuantity: 5,
-		price: 100,
-	},
-	{
-		name: `Banana`,
-		id: `B123`,
-		totalQuantity: 5,
-		price: 80,
-	},
-]
+function Page() {
+	const ulysses = useUlysses()
+	const addToCart = useAddToCart()
+	const updateQuantity = useUpdateQuantity()
 
-export default function Page() {
-	const { cart } = useUlysses()
-	const subtotal = useSubtotal()
-	const totalQuantity = useTotalQuantity()
 	return (
 		<main>
 			<section>
-				<button onClick={cart.open}>Open Cart</button>
+				<h1>Ulysses Sandbox</h1>
+				<h3>Functions</h3>
+				<div>
+					<button onClick={() => addToCart({
+						sku: `APL`,
+						title: `Apple`,
+						price: 50,
+					})}>Add Apple to Cart</button>
+					<button onClick={() => updateQuantity(`APL`, -1)}>Subtract 1 Apple</button>
+				</div>
+				<div>
+					<button onClick={() => addToCart({
+						sku: `OBAMA`,
+						title: `Orangebanan`,
+						price: 15,
+					})}>Add Orangebanan to Cart</button>
+				</div>
+				<hr />
+
+
+
+				<h3>Status:</h3>
+				<div>
+					<strong>Total Quantity:</strong> {ulysses.totalQuantity}
+				</div>
+				<div>
+					<strong>Total Price:</strong> {ulysses.totalPrice}
+				</div>
+				<hr />
+
+
+
+
+
+				<h3>Line Items:</h3>
+				<ul>
+					{ulysses.lineItems.map((item, key) => {
+						return (
+							<li key={key}><pre>{JSON.stringify(item, null, 3)}</pre></li>
+						)
+					})}
+				</ul>
 			</section>
-			<section>
-				{inventory.map((item, index) => (
-					<button key={index} onClick={() => cart.add(item)}>Add {item.name}</button>
-				))}
-			</section>
-			<section>
-				{inventory.map((item, index) => (
-					<button key={index} onClick={() => cart.remove(item.id)}>Remove {item.name}</button>
-				))}
-			</section>
-			<div>Total Quantity: x{totalQuantity}</div>
-			<div>Subtotal: {subtotal}</div>
 		</main>
+	)
+}
+
+export default function Layout(){
+	return (
+		<UlyssesProvider>
+			<UlyssesPluginShopify client={{test:true}} />
+			<Page />
+		</UlyssesProvider>
 	)
 }
