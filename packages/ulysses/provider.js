@@ -28,7 +28,7 @@ export default function UlyssesProvider({
 		let newTotalPrice = 0
 		for(let i = lineItems.length; i--;){
 			newTotalQuantity += lineItems[i].quantity || 1
-			newTotalPrice += lineItems[i].price || 0
+			newTotalPrice += (lineItems[i].price * lineItems[i].quantity) || 0
 		}
 		setTotalQuantity(newTotalQuantity)
 		setTotalPrice(newTotalPrice)

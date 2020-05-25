@@ -11,39 +11,66 @@ export default function ShopifyPlugin({ clientOptions }) {
 		// Load or create checkout ID
 		let checkout
 
+		async function getCheckout(){
+			if (checkout) return checkout
+			if (localStorage.checkoutId) {
+				console.log(`Loading checkout from localStorage`)
+				return await client.checkout.fetch(localStorage.checkoutId)
+			}
+			console.log(`Creating new checkout`)
+			return await client.checkout.create()
+		}
+
+		async function onAdjustQuantity(item, amount){
+			console.log(`Shopify adjust quantity`)
+			if (!item.lineItemId){
+				console.error(`"lineItemId" is required for onAdjustQuantity method.`)
+				return false
+			}
+			checkout = await getCheckout()
+			try {
+				const newItem = {
+					id: item.lineItemId,
+					quantity: item.quantity + amount,
+					// customAttributes: [{ key: `ulyssesItem`, value: JSON.stringify(item) }],
+				}
+				console.log(`Updating Shopify item`, newItem)
+				checkout = await client.checkout.updateLineItems(checkout.id, [newItem])
+				console.log(`Shopify adjust quantity result`, checkout.lineItems)
+			}
+			catch (err) {
+				console.log(`Shopify onAdjustQuantity failed`)
+				console.error(err)
+				return false
+			}
+			return true
+		}
+
 		async function onAddToCart(item) {
 			console.log(`Shopify add to cart`)
-
 			if (!item.shopifyId) {
 				console.error(`"shopifyId" is required for addToCart method.`)
 				return false
 			}
-
-			if (!checkout) {
-				if (localStorage.checkoutId) {
-					checkout = await client.checkout.fetch(localStorage.checkoutId)
-				}
-				else {
-					checkout = await client.checkout.create()
-				}
-			}
-
-
+			checkout = await getCheckout()
 			try {
 				checkout = await client.checkout.addLineItems(checkout.id, [{
 					variantId: item.shopifyId,
 					quantity: item.quantity,
 					customAttributes: [{ key: `ulyssesItem`, value: JSON.stringify(item) }],
 				}])
-				console.log(`Shopify add item result`, checkout.lineItems[0])
+				checkout.lineItems.forEach(lineItem => {
+					if (lineItem.variant.id === item.shopifyId){
+						console.log(`Set Shopify line item ID`)
+						item.lineItemId = lineItem.id
+					}
+				})
 			}
 			catch(err){
 				console.log(`Shopify addLineItems failed`)
 				console.error(err)
 				return false
 			}
-
-
 			return true
 		}
 		function onCheckout() {
@@ -53,6 +80,7 @@ export default function ShopifyPlugin({ clientOptions }) {
 
 		let events = merge(ulysses.events, {
 			addToCart: [onAddToCart],
+			adjustQuantity: [onAdjustQuantity],
 			checkout: [onCheckout],
 		})
 		ulysses.setEvents(events)
