@@ -12,14 +12,16 @@ export default function ShopifyPlugin(options) {
 
 		async function getCheckout(){
 			if (!checkout) {
-				console.log(`Creating new checkout`)
-				checkout = await client.checkout.create()
+				console.log(`Creating new Shopify checkout...`)
+				let newCheckout = await client.checkout.create()
+				if(!checkout){
+					checkout = newCheckout
+				}
 			}
 			return checkout
 		}
 
 		async function onAdjustQuantity(args){
-			console.log(`args`, args)
 			let { lineItem, amount } = args
 			if (!lineItem.lineItemId){
 				console.error(`"lineItemId" is required for onAdjustQuantity method.`)
@@ -30,7 +32,6 @@ export default function ShopifyPlugin(options) {
 				const newItem = {
 					id: lineItem.lineItemId,
 					quantity: lineItem.quantity + amount,
-					// customAttributes: [{ key: `ulyssesItem`, value: JSON.stringify(item) }],
 				}
 				checkout = await client.checkout.updateLineItems(checkout.id, [newItem])
 			}
@@ -51,7 +52,6 @@ export default function ShopifyPlugin(options) {
 				checkout = await client.checkout.addLineItems(checkout.id, [{
 					variantId: item.shopifyId,
 					quantity: item.quantity,
-					customAttributes: [{ key: `ulyssesItem`, value: JSON.stringify(item) }],
 				}])
 				checkout.lineItems.forEach(lineItem => {
 					if (lineItem.variant.id === item.shopifyId){
@@ -94,7 +94,7 @@ export default function ShopifyPlugin(options) {
 		}
 
 		async function onSaveState({ state }){
-			console.log(`Shopify save state`, state)
+			console.log(`Shopify onSaveState`)
 			checkout = await getCheckout()
 			if(!checkout || !checkout.id){
 				console.warn(`"checkout.id" not found when saving state`)
@@ -103,12 +103,14 @@ export default function ShopifyPlugin(options) {
 			state.shopifyCheckoutId = checkout.id
 		}
 		async function onLoadState({ state }) {
-			console.log(`Shopify load state`, JSON.stringify(state), typeof state)
+			console.log(`Shopify onLoad State`)
 			if (!state.shopifyCheckoutId){
 				console.warn(`"shopifyCheckoutId" not found in loaded state`)
 				return
 			}
+			console.log(`Loading Shopify checkout...`)
 			checkout = await client.checkout.fetch(state.shopifyCheckoutId)
+			console.log(`Loaded Shopify checkout`)
 		}
 
 		ulysses.on(`addToCart`, onAddToCart)

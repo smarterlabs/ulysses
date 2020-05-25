@@ -45,7 +45,7 @@ export default function UlyssesProvider({
 	const [inventory, setInventory] = useState({})
 	const [totalQuantity, setTotalQuantity] = useState(0)
 	const [totalPrice, setTotalPrice] = useState(0)
-	const [isLoading, setIsLoading] = useState(false)
+	const [isLoading, setIsLoading] = useState(true)
 	const [cartIsOpen, setCartIsOpen] = useState(false)
 	const [hasInit, setHasInit] = useState(false)
 	const [events, eventsDispatch] = useReducer(eventsReducer, {})
@@ -55,7 +55,6 @@ export default function UlyssesProvider({
 		eventsDispatch({ label, fn, type: `on` })
 	}
 	function emit(label, data) {
-		console.log(`Emitting`, label, data)
 		return new Promise((resolve) => {
 			eventsDispatch({
 				label,
@@ -83,7 +82,6 @@ export default function UlyssesProvider({
 			if (hasInit) {
 				let state = { lineItems }
 				await ulysses.emit(`saveState`, { ...ulysses, state })
-				console.log(`Saving state to ${localStorageKey}`)
 				localStorage.setItem(localStorageKey, JSON.stringify(state))
 			}
 			setHasInit(true)
@@ -94,22 +92,20 @@ export default function UlyssesProvider({
 
 	// Load from localStorage
 	useEffect(() => {
-		console.log(`Loading state from ${localStorageKey}`)
 		let state = localStorage.getItem(localStorageKey)
 		if (!state){
-			console.log(`ls not found`)
+			setIsLoading(false)
 			return
 		}
 		state = JSON.parse(state)
 		async function loadState(){
 			await ulysses.emit(`loadState`, { ...ulysses, state })
-			console.log(`Emitted load state`)
 			if (state.lineItems) {
 				setLineItems(state.lineItems)
 			}
+			setIsLoading(false)
 		}
-		setTimeout(loadState, 1000)
-		// loadState()
+		loadState()
 	}, [])
 
 	// Exposed via useUlysses
