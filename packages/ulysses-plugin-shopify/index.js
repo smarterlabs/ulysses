@@ -73,6 +73,31 @@ export default function ShopifyPlugin({ clientOptions }) {
 			}
 			return true
 		}
+
+
+
+		async function onRemove(item) {
+			console.log(`Shopify remove`)
+			if (!item.lineItemId) {
+				console.error(`"lineItemId" is required for remove method.`)
+				return false
+			}
+			checkout = await getCheckout()
+			try {
+				checkout = await client.checkout.removeLineItems(checkout.id, [item.lineItemId])
+				console.log(`Shopify remove result`, checkout.lineItems)
+			}
+			catch (err) {
+				console.log(`Shopify remove failed`)
+				console.error(err)
+				return false
+			}
+			return true
+		}
+
+
+
+
 		function onCheckout() {
 			console.log(`Shopify checkout`)
 			console.log(`checkout`)
@@ -82,6 +107,7 @@ export default function ShopifyPlugin({ clientOptions }) {
 			addToCart: [onAddToCart],
 			adjustQuantity: [onAdjustQuantity],
 			checkout: [onCheckout],
+			remove: [onRemove],
 		})
 		ulysses.setEvents(events)
 	}, [])

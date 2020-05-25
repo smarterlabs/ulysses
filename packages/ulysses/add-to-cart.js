@@ -8,7 +8,6 @@ export default async function addToCart({
 	uid,
 	setLineItems,
 }) {
-	console.log(`addToCart`)
 	setIsLoading(true)
 	item = {
 		price: 0,
@@ -20,7 +19,7 @@ export default async function addToCart({
 	const result = await emit(`addToCart`, item)
 	if (!result) {
 		console.error(`addToCart failed`)
-		return
+		return setIsLoading(false)
 	}
 
 	let updatedItem = false

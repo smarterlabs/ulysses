@@ -8,28 +8,30 @@ export default async function updateQuantity({
 	setLineItems,
 	emit,
 	uid,
+	setIsLoading,
 }) {
 	let lineItem
 	let newLineItems = [...lineItems]
 	if(!uid) {
 		console.log(`"${uid}" is required to adjust quantity for line item "${productId}"`)
-		return false
 	}
+	setIsLoading(true)
 	lineItem = find(newLineItems, o => o[uid] === productId)
 	if (!lineItem) {
 		console.error(`Line item "${productId}" not found`)
 		console.error(`Line item "${productId}" not found`)
-		return false
+		return setIsLoading(false)
 	}
 
 	// Run events from plugins
 	const result = await emit(`adjustQuantity`, lineItem, amount)
 	if (!result) {
 		console.error(`addToCart failed`)
-		return
+		return setIsLoading(false)
 	}
 
 	lineItem.quantity += amount
 	clearEmpty(newLineItems)
 	setLineItems(newLineItems)
+	setIsLoading(false)
 }

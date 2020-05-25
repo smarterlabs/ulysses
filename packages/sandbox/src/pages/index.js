@@ -5,7 +5,7 @@ import useUlysses from '@smarterlabs/ulysses/use-ulysses'
 
 function UlyssesSandboxPage() {
 	const ulysses = useUlysses()
-	const { addToCart, adjustQuantity } = ulysses
+	const { addToCart, adjustQuantity, remove } = ulysses
 
 	return (
 		<main>
@@ -29,6 +29,12 @@ function UlyssesSandboxPage() {
 						disabled={ulysses.isLoading ? true : false}
 					>
 						Subtract 1 Apple
+					</button>
+					<button
+						onClick={() => remove(`APL`)}
+						disabled={ulysses.isLoading ? true : false}
+					>
+						Remove All Apples
 					</button>
 				</div>
 				<div>

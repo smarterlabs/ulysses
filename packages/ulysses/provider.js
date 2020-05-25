@@ -4,6 +4,7 @@ import addToCart from './add-to-cart'
 import emit from './emit'
 import checkout from './checkout'
 import adjustQuantity from './adjust-quantity'
+import remove from './remove'
 
 export default function UlyssesProvider({
 	children,
@@ -57,7 +58,8 @@ export default function UlyssesProvider({
 	ulysses.addToCart = item => addToCart({ item, ...ulysses })
 	ulysses.emit = (label, ...args) => emit({ label, args, ...ulysses })
 	ulysses.checkout = () => checkout(ulysses)
-	ulysses.adjustQuantity = (productId, amount) => adjustQuantity({productId, amount, ...ulysses})
+	ulysses.adjustQuantity = (productId, amount) => adjustQuantity({ productId, amount, ...ulysses })
+	ulysses.remove = productId => remove({ productId, ...ulysses })
 
 	return(
 		<Context.Provider value={ulysses}>
