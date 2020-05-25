@@ -4,10 +4,6 @@ import merge from 'deepmerge'
 import Client from 'shopify-buy'
 
 export default function ShopifyPlugin(options) {
-	options = {
-		localStorageKey: `ulyssesShopify-v1`,
-		...options,
-	}
 	const ulysses = useUlysses()
 	useEffect(() => {
 		const client = (Client && Client.buildClient) ? Client.buildClient(options.client) : {}
@@ -17,36 +13,11 @@ export default function ShopifyPlugin(options) {
 
 		async function getCheckout(){
 			if (!checkout) {
-				const lsId = localStorage.getItem(options.localStorageKey)
-				if (lsId) {
-					checkout = await client.checkout.fetch(lsId)
-					if(!ulysses.lineItems.length){
-						let items = []
-						checkout.lineItems.forEach(item => {
-							item.customAttributes.forEach(({key, value}) => {
-								if(key === `ulyssesItem`){
-									items.push({
-										...JSON.parse(value),
-										lineItemId: item.id,
-										quantity: item.quantity,
-									})
-								}
-							})
-						})
-						ulysses.setLineItems(items)
-					}
-				}
-				else {
-					console.log(`Creating new checkout`)
-					checkout = await client.checkout.create()
-				}
+				console.log(`Creating new checkout`)
+				checkout = await client.checkout.create()
 			}
-			localStorage.setItem(options.localStorageKey, checkout.id)
 			return checkout
 		}
-		!async function(){
-			checkout = await getCheckout()
-		}()
 
 		async function onAdjustQuantity(item, amount){
 			if (!item.lineItemId){
@@ -112,12 +83,31 @@ export default function ShopifyPlugin(options) {
 			return true
 		}
 
-
-
-
 		function onCheckout() {
 			console.log(`Shopify checkout`)
-			console.log(`checkout`)
+			let href = checkout.webUrl
+			if (options.development) {
+				href = `${href}?fts=0&preview_theme_id=${process.env.GATSBY_SHOPIFY_THEME_ID}`
+			}
+			window.location.href = href
+		}
+
+		async function onSaveState({ state }){
+			console.log(`Shopify save state`, state)
+			checkout = await getCheckout()
+			if(!checkout || !checkout.id){
+				console.warn(`"checkout.id" not found when saving state`)
+				return
+			}
+			state.shopifyCheckoutId = checkout.id
+		}
+		async function onLoadState({ state }) {
+			console.log(`Shopify load state`, state)
+			if (state.shopifyCheckoutId){
+				console.warn(`"shopifyCheckoutId" not found in loaded state`)
+				return
+			}
+			checkout = await client.checkout.fetch(state.shopifyCheckoutId)
 		}
 
 		let events = merge(ulysses.events, {
@@ -125,6 +115,8 @@ export default function ShopifyPlugin(options) {
 			adjustQuantity: [onAdjustQuantity],
 			checkout: [onCheckout],
 			remove: [onRemove],
+			saveState: [onSaveState],
+			loadState: [onLoadState],
 		})
 		ulysses.setEvents(events)
 	}, [])

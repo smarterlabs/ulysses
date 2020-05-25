@@ -9,6 +9,7 @@ import remove from './remove'
 export default function UlyssesProvider({
 	children,
 	plugins = [],
+	localStorageKey = `ulysses-v1`,
 	uid = `sku`,
 }){
 	const [lineItems, setLineItems] = useState([])
@@ -18,13 +19,15 @@ export default function UlyssesProvider({
 	const [totalPrice, setTotalPrice] = useState(0)
 	const [isLoading, setIsLoading] = useState(false)
 	const [cartIsOpen, setCartIsOpen] = useState(false)
+	const [hasInit, setHasInit] = useState(false)
 	const [events, setEvents] = useState({
 		openCart: [() => setCartIsOpen(true)],
 		closeCart: [() => setCartIsOpen(false)],
 	})
 
-	// Update total quantity and price when line items update
+
 	useEffect(() => {
+		// Update total quantity and price when line items update
 		let newTotalQuantity = 0
 		let newTotalPrice = 0
 		for(let i = lineItems.length; i--;){
@@ -33,7 +36,40 @@ export default function UlyssesProvider({
 		}
 		setTotalQuantity(newTotalQuantity)
 		setTotalPrice(newTotalPrice)
-	}, [lineItems])
+
+		async function saveState() {
+			// Save to localStorage
+			if (hasInit) {
+				let state = { lineItems }
+				await ulysses.emit(`saveState`, { ...ulysses, state })
+				console.log(`Saving state to ${localStorageKey}`)
+				localStorage.setItem(localStorageKey, JSON.stringify(state))
+			}
+			setHasInit(true)
+		}
+		saveState()
+
+	}, [lineItems, hasInit, setHasInit])
+
+	// Load from localStorage
+	useEffect(() => {
+		console.log(`Loading state from ${localStorageKey}`)
+		let state = localStorage.getItem(localStorageKey)
+		if (!state){
+			console.log(`ls not found`)
+			return
+		}
+		state = JSON.parse(state)
+		async function loadState(){
+			await emit({ ...ulysses, label: `loadState`, state })
+			console.log(`Emitted load state`)
+			if (state.lineItems) {
+				setLineItems(state.lineItems)
+			}
+		}
+		setTimeout(loadState, 1000)
+		// loadState()
+	}, [emit])
 
 	// Exposed via useUlysses
 	const ulysses = {

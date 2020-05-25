@@ -49,6 +49,11 @@ function UlyssesSandboxPage() {
 						Add Orangebanan to Cart
 					</button>
 				</div>
+				<div>
+					<button
+						onClick={() => ulysses.checkout()}
+					>Checkout</button>
+				</div>
 				<hr />
 
 
@@ -84,13 +89,14 @@ function UlyssesSandboxPage() {
 
 export default function Layout(){
 	return (
-		<UlyssesProvider>
+		<UlyssesProvider
+			localStorageKey='asdfasdf'
+		>
 			<UlyssesPluginShopify
 				client={{
 					storefrontAccessToken: `1e5affc44fbe68334d8e2e5c07851d3f`,
 					domain: `labs-boilerplate.myshopify.com`,
 				}}
-				localStorageKey='ulyssesShopify-v1'
 			/>
 			<UlyssesSandboxPage />
 		</UlyssesProvider>
