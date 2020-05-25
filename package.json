@@ -14,7 +14,9 @@
     "dev:sandbox": "cd packages/sandbox && yarn dev",
     "lint": "eslint ./",
     "lint:fix": "eslint ./ --fix",
-    "test": "yarn run build && jest"
+    "publish": "lerna publish from-package --yes",
+    "stop": "sudo killall -9 node",
+    "version": "lerna version"
   },
   "husky": {
     "hooks": {
