@@ -2,7 +2,7 @@
   "name": "@smarterlabs/ulysses",
   "private": false,
   "version": "0.0.0",
-  "author": "Kennedy Rose <kennedyianrose@gmail.com>",
+  "author": "https://smarterlabs.com",
   "main": "use-ulysses.js",
   "scripts": {
     "build": "yarn run clean && babel src --out-dir dist",

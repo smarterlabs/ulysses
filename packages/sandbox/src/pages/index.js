@@ -4,7 +4,16 @@ import UlyssesPluginShopify from '@smarterlabs/ulysses-plugin-shopify'
 import useUlysses from '@smarterlabs/ulysses/use-ulysses'
 
 function UlyssesSandboxPage() {
-	const ulysses = useUlysses()
+	const {
+		isLoading,
+		addToCart,
+		adjustQuantity,
+		remove,
+		checkout,
+		totalQuantity,
+		totalPrice,
+		lineItems,
+	} = useUlysses()
 
 	return (
 		<main>
@@ -13,45 +22,45 @@ function UlyssesSandboxPage() {
 				<h3>Functions</h3>
 				<div>
 					<button
-						onClick={() => ulysses.addToCart({
+						onClick={() => addToCart({
 							sku: `APL`,
 							shopifyId: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMzc3ODU5MDM1MTQ5Ng==`,
 							title: `Apple`,
 							price: 50,
 						})}
-						disabled={ulysses.isLoading ? true : false}
+						disabled={isLoading ? true : false}
 					>
 						Add Apple to Cart
 					</button>
 					<button
-						onClick={() => ulysses.adjustQuantity(`APL`, -1)}
-						disabled={ulysses.isLoading ? true : false}
+						onClick={() => adjustQuantity(`APL`, -1)}
+						disabled={isLoading ? true : false}
 					>
 						Subtract 1 Apple
 					</button>
 					<button
-						onClick={() => ulysses.remove(`APL`)}
-						disabled={ulysses.isLoading ? true : false}
+						onClick={() => remove(`APL`)}
+						disabled={isLoading ? true : false}
 					>
 						Remove All Apples
 					</button>
 				</div>
 				<div>
 					<button
-						onClick={() => ulysses.addToCart({
+						onClick={() => addToCart({
 							sku: `OBAMA`,
 							shopifyId: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zNDA0MTExMzczOTQwMA==`,
 							title: `Orangebanan`,
 							price: 15,
 						})}
-						disabled={ulysses.isLoading ? true : false}
+						disabled={isLoading ? true : false}
 					>
 						Add Orangebanan to Cart
 					</button>
 				</div>
 				<div>
 					<button
-						onClick={() => ulysses.checkout()}
+						onClick={() => checkout()}
 					>Checkout</button>
 				</div>
 				<hr />
@@ -60,13 +69,13 @@ function UlyssesSandboxPage() {
 
 				<h3>Status:</h3>
 				<div>
-					<strong>Adding to Cart:</strong> {ulysses.isLoading ? `true` : `false`}
+					<strong>Adding to Cart:</strong> {isLoading ? `true` : `false`}
 				</div>
 				<div>
-					<strong>Total Quantity:</strong> {ulysses.totalQuantity}
+					<strong>Total Quantity:</strong> {totalQuantity}
 				</div>
 				<div>
-					<strong>Total Price:</strong> {ulysses.totalPrice}
+					<strong>Total Price:</strong> {totalPrice}
 				</div>
 				<hr />
 
@@ -76,7 +85,7 @@ function UlyssesSandboxPage() {
 
 				<h3>Line Items:</h3>
 				<ul>
-					{ulysses.lineItems.map((item, key) => {
+					{lineItems.map((item, key) => {
 						return (
 							<li key={key}><pre>{JSON.stringify(item, null, 3)}</pre></li>
 						)
