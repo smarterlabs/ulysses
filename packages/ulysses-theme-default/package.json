@@ -3,7 +3,7 @@
   "private": false,
   "version": "0.0.1",
   "author": "https://smarterlabs.com",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "yarn run clean && babel src --out-dir dist",
     "clean": "del dist",

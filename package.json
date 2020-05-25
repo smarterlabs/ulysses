@@ -14,7 +14,7 @@
     "dev:sandbox": "cd packages/sandbox && yarn dev",
     "lint": "eslint ./",
     "lint:fix": "eslint ./ --fix",
-    "publish": "lerna publish from-package --yes",
+    "publish": "yarn build && lerna publish from-package --yes",
     "stop": "sudo killall -9 node",
     "version": "lerna version"
   },
