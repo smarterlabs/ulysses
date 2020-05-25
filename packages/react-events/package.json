@@ -1,9 +1,9 @@
 {
-  "name": "@smarterlabs/ulysses",
+  "name": "@smarterlabs/react-events",
   "private": false,
   "version": "0.0.0",
   "author": "Kennedy Rose <kennedyianrose@gmail.com>",
-  "main": "use-ulysses.js",
+  "main": "use-events.js",
   "scripts": {
     "build": "yarn run clean && babel src --out-dir dist",
     "clean": "del dist",
@@ -14,7 +14,5 @@
     "react": "*"
   },
   "devDependencies": {},
-  "dependencies": {
-    "@smarterlabs/react-events": "*"
-  }
+  "dependencies": {}
 }

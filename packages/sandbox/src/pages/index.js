@@ -1,15 +1,29 @@
-import React from 'react'
-import UlyssesProvider from '@smarterlabs/ulysses/provider'
-import UlyssesPluginShopify from '@smarterlabs/ulysses-plugin-shopify'
-import useUlysses from '@smarterlabs/ulysses/use-ulysses'
+import React, { useEffect } from 'react'
+import TestProvider from '@smarterlabs/test/provider'
+import useTest from '@smarterlabs/test/use-test'
 
 function UlyssesSandboxPage() {
-	const ulysses = useUlysses()
-	const { addToCart, adjustQuantity, remove } = ulysses
+	const { on, emit } = useTest()
+
+	useEffect(() => {
+		on(`init`, () => {
+			return new Promise(resolve => {
+				console.log(`init start...`)
+				setTimeout(resolve, 1000)
+			})
+		})
+
+		setTimeout(() => {
+			!async function(){
+				await emit(`init`)
+				console.log(`Done with init emit`)
+			}()
+		}, 100)
+	}, [])
 
 	return (
 		<main>
-			<section>
+			{/* <section>
 				<h1>Ulysses Sandbox</h1>
 				<h3>Functions</h3>
 				<div>
@@ -82,23 +96,30 @@ function UlyssesSandboxPage() {
 						)
 					})}
 				</ul>
-			</section>
+			</section> */}
 		</main>
 	)
 }
 
 export default function Layout(){
+	// return (
+	// 	<TestProvider>
+	// 		<UlyssesProvider
+	// 			localStorageKey='asdfasdf'
+	// 		>
+	// 			<UlyssesPluginShopify
+	// 				client={{
+	// 					storefrontAccessToken: `1e5affc44fbe68334d8e2e5c07851d3f`,
+	// 					domain: `labs-boilerplate.myshopify.com`,
+	// 				}}
+	// 			/>
+	// 			<UlyssesSandboxPage />
+	// 		</UlyssesProvider>
+	// 	</TestProvider>
+	// )
 	return (
-		<UlyssesProvider
-			localStorageKey='asdfasdf'
-		>
-			<UlyssesPluginShopify
-				client={{
-					storefrontAccessToken: `1e5affc44fbe68334d8e2e5c07851d3f`,
-					domain: `labs-boilerplate.myshopify.com`,
-				}}
-			/>
+		<TestProvider>
 			<UlyssesSandboxPage />
-		</UlyssesProvider>
+		</TestProvider>
 	)
 }

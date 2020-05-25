@@ -110,15 +110,14 @@ export default function ShopifyPlugin(options) {
 			checkout = await client.checkout.fetch(state.shopifyCheckoutId)
 		}
 
-		let events = merge(ulysses.events, {
-			addToCart: [onAddToCart],
-			adjustQuantity: [onAdjustQuantity],
-			checkout: [onCheckout],
-			remove: [onRemove],
-			saveState: [onSaveState],
-			loadState: [onLoadState],
-		})
-		ulysses.setEvents(events)
+		ulysses.on(`addToCart`, onAddToCart)
+		ulysses.on(`adjustQuantity`, onAdjustQuantity)
+		ulysses.on(`checkout`, onCheckout)
+		ulysses.on(`remove`, onRemove)
+		ulysses.on(`saveState`, onSaveState)
+		ulysses.on(`loadState`, onLoadState)
+
+
 	}, [])
 	return null
 }

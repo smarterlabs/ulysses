@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import Context from './context'
 import addToCart from './add-to-cart'
-import emit from './emit'
 import checkout from './checkout'
 import adjustQuantity from './adjust-quantity'
 import remove from './remove'
+import EventsProvider from '@smarterlabs/react-events/provider'
+import useEvents from '@smarterlabs/react-events'
 
 export default function UlyssesProvider({
 	children,
@@ -20,9 +21,12 @@ export default function UlyssesProvider({
 	const [isLoading, setIsLoading] = useState(false)
 	const [cartIsOpen, setCartIsOpen] = useState(false)
 	const [hasInit, setHasInit] = useState(false)
-	const [events, setEvents] = useState({
-		openCart: [() => setCartIsOpen(true)],
-		closeCart: [() => setCartIsOpen(false)],
+	const { on, emit } = useEvents()
+	console.log(`on`, on)
+
+	useEffect(() => {
+		on(`openCart`, () => setCartIsOpen(true))
+		on(`closeCart`, () => setCartIsOpen(false))
 	})
 
 
@@ -83,23 +87,23 @@ export default function UlyssesProvider({
 		totalQuantity,
 		totalPrice,
 		plugins,
-		emit,
 		isLoading,
 		setIsLoading,
-		events,
-		setEvents,
+		on,
+		emit,
 		cartIsOpen,
 		setCartIsOpen,
 	}
 	ulysses.addToCart = item => addToCart({ item, ...ulysses })
-	ulysses.emit = (label, ...args) => emit({ label, args, ...ulysses })
 	ulysses.checkout = () => checkout(ulysses)
 	ulysses.adjustQuantity = (productId, amount) => adjustQuantity({ productId, amount, ...ulysses })
 	ulysses.remove = productId => remove({ productId, ...ulysses })
 
 	return(
-		<Context.Provider value={ulysses}>
-			{children}
-		</Context.Provider>
+		<EventsProvider>
+			<Context.Provider value={ulysses}>
+				{children}
+			</Context.Provider>
+		</EventsProvider>
 	)
 }
