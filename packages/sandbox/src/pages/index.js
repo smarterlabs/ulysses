@@ -86,10 +86,11 @@ export default function Layout(){
 	return (
 		<UlyssesProvider>
 			<UlyssesPluginShopify
-				clientOptions={{
+				client={{
 					storefrontAccessToken: `1e5affc44fbe68334d8e2e5c07851d3f`,
 					domain: `labs-boilerplate.myshopify.com`,
 				}}
+				localStorageKey='ulyssesShopify-v1'
 			/>
 			<UlyssesSandboxPage />
 		</UlyssesProvider>

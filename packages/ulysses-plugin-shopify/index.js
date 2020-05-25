@@ -3,26 +3,52 @@ import useUlysses from '@smarterlabs/ulysses/use-ulysses'
 import merge from 'deepmerge'
 import Client from 'shopify-buy'
 
-export default function ShopifyPlugin({ clientOptions }) {
+export default function ShopifyPlugin(options) {
+	options = {
+		localStorageKey: `ulyssesShopify-v1`,
+		...options,
+	}
 	const ulysses = useUlysses()
 	useEffect(() => {
-		const client = (Client && Client.buildClient) ? Client.buildClient(clientOptions) : {}
+		const client = (Client && Client.buildClient) ? Client.buildClient(options.client) : {}
 
 		// Load or create checkout ID
 		let checkout
 
 		async function getCheckout(){
-			if (checkout) return checkout
-			if (localStorage.checkoutId) {
-				console.log(`Loading checkout from localStorage`)
-				return await client.checkout.fetch(localStorage.checkoutId)
+			if (!checkout) {
+				const lsId = localStorage.getItem(options.localStorageKey)
+				if (lsId) {
+					checkout = await client.checkout.fetch(lsId)
+					if(!ulysses.lineItems.length){
+						let items = []
+						checkout.lineItems.forEach(item => {
+							item.customAttributes.forEach(({key, value}) => {
+								if(key === `ulyssesItem`){
+									items.push({
+										...JSON.parse(value),
+										lineItemId: item.id,
+										quantity: item.quantity,
+									})
+								}
+							})
+						})
+						ulysses.setLineItems(items)
+					}
+				}
+				else {
+					console.log(`Creating new checkout`)
+					checkout = await client.checkout.create()
+				}
 			}
-			console.log(`Creating new checkout`)
-			return await client.checkout.create()
+			localStorage.setItem(options.localStorageKey, checkout.id)
+			return checkout
 		}
+		!async function(){
+			checkout = await getCheckout()
+		}()
 
 		async function onAdjustQuantity(item, amount){
-			console.log(`Shopify adjust quantity`)
 			if (!item.lineItemId){
 				console.error(`"lineItemId" is required for onAdjustQuantity method.`)
 				return false
@@ -34,12 +60,9 @@ export default function ShopifyPlugin({ clientOptions }) {
 					quantity: item.quantity + amount,
 					// customAttributes: [{ key: `ulyssesItem`, value: JSON.stringify(item) }],
 				}
-				console.log(`Updating Shopify item`, newItem)
 				checkout = await client.checkout.updateLineItems(checkout.id, [newItem])
-				console.log(`Shopify adjust quantity result`, checkout.lineItems)
 			}
 			catch (err) {
-				console.log(`Shopify onAdjustQuantity failed`)
 				console.error(err)
 				return false
 			}
@@ -47,7 +70,6 @@ export default function ShopifyPlugin({ clientOptions }) {
 		}
 
 		async function onAddToCart(item) {
-			console.log(`Shopify add to cart`)
 			if (!item.shopifyId) {
 				console.error(`"shopifyId" is required for addToCart method.`)
 				return false
@@ -61,13 +83,11 @@ export default function ShopifyPlugin({ clientOptions }) {
 				}])
 				checkout.lineItems.forEach(lineItem => {
 					if (lineItem.variant.id === item.shopifyId){
-						console.log(`Set Shopify line item ID`)
 						item.lineItemId = lineItem.id
 					}
 				})
 			}
 			catch(err){
-				console.log(`Shopify addLineItems failed`)
 				console.error(err)
 				return false
 			}
@@ -77,7 +97,6 @@ export default function ShopifyPlugin({ clientOptions }) {
 
 
 		async function onRemove(item) {
-			console.log(`Shopify remove`)
 			if (!item.lineItemId) {
 				console.error(`"lineItemId" is required for remove method.`)
 				return false
@@ -85,10 +104,8 @@ export default function ShopifyPlugin({ clientOptions }) {
 			checkout = await getCheckout()
 			try {
 				checkout = await client.checkout.removeLineItems(checkout.id, [item.lineItemId])
-				console.log(`Shopify remove result`, checkout.lineItems)
 			}
 			catch (err) {
-				console.log(`Shopify remove failed`)
 				console.error(err)
 				return false
 			}
