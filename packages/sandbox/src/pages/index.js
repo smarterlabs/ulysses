@@ -2,13 +2,10 @@ import React from 'react'
 import UlyssesProvider from '@smarterlabs/ulysses/provider'
 import UlyssesPluginShopify from '@smarterlabs/ulysses-plugin-shopify'
 import useUlysses from '@smarterlabs/ulysses/use-ulysses'
-import useAddToCart from '@smarterlabs/ulysses/use-add-to-cart'
-import useUpdateQuantity from '@smarterlabs/ulysses/use-update-quantity'
 
-function Page() {
+function UlyssesSandboxPage() {
 	const ulysses = useUlysses()
-	const addToCart = useAddToCart()
-	const updateQuantity = useUpdateQuantity()
+	const { addToCart, adjustQuantity } = ulysses
 
 	return (
 		<main>
@@ -16,26 +13,44 @@ function Page() {
 				<h1>Ulysses Sandbox</h1>
 				<h3>Functions</h3>
 				<div>
-					<button onClick={() => addToCart({
-						sku: `APL`,
-						shopifyId: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMzc3ODU5MDM1MTQ5Ng==`,
-						title: `Apple`,
-						price: 50,
-					})}>Add Apple to Cart</button>
-					<button onClick={() => updateQuantity(`APL`, -1)}>Subtract 1 Apple</button>
+					<button
+						onClick={() => addToCart({
+							sku: `APL`,
+							shopifyId: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMzc3ODU5MDM1MTQ5Ng==`,
+							title: `Apple`,
+							price: 50,
+						})}
+						disabled={ulysses.isLoading ? true : false}
+					>
+						Add Apple to Cart
+					</button>
+					<button
+						onClick={() => adjustQuantity(`APL`, -1)}
+						disabled={ulysses.isLoading ? true : false}
+					>
+						Subtract 1 Apple
+					</button>
 				</div>
 				<div>
-					<button onClick={() => addToCart({
-						sku: `OBAMA`,
-						title: `Orangebanan`,
-						price: 15,
-					})}>Add Orangebanan to Cart</button>
+					<button
+						onClick={() => addToCart({
+							sku: `OBAMA`,
+							title: `Orangebanan`,
+							price: 15,
+						})}
+						disabled={ulysses.isLoading ? true : false}
+					>
+						Add Orangebanan to Cart
+					</button>
 				</div>
 				<hr />
 
 
 
 				<h3>Status:</h3>
+				<div>
+					<strong>Adding to Cart:</strong> {ulysses.isLoading ? `true` : `false`}
+				</div>
 				<div>
 					<strong>Total Quantity:</strong> {ulysses.totalQuantity}
 				</div>
@@ -62,7 +77,6 @@ function Page() {
 }
 
 export default function Layout(){
-	console.log(`Layout`)
 	return (
 		<UlyssesProvider>
 			<UlyssesPluginShopify
@@ -71,7 +85,7 @@ export default function Layout(){
 					domain: `labs-boilerplate.myshopify.com`,
 				}}
 			/>
-			<Page />
+			<UlyssesSandboxPage />
 		</UlyssesProvider>
 	)
 }

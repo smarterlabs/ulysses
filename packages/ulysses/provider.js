@@ -1,27 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import Context from './context'
+import addToCart from './add-to-cart'
+import emit from './emit'
+import checkout from './checkout'
+import adjustQuantity from './adjust-quantity'
 
-export default function UlyssesProvider({ children, plugins = [], uid = `sku` }){
+export default function UlyssesProvider({
+	children,
+	plugins = [],
+	uid = `sku`,
+}){
 	const [lineItems, setLineItems] = useState([])
 	const [pricing, setPricing] = useState({})
 	const [inventory, setInventory] = useState({})
 	const [totalQuantity, setTotalQuantity] = useState(0)
 	const [totalPrice, setTotalPrice] = useState(0)
-	const [events, setEvents] = useState({})
-	const [isAddingToCart, setIsAddingToCart] = useState(false)
+	const [isLoading, setIsLoading] = useState(false)
+	const [cartIsOpen, setCartIsOpen] = useState(false)
+	const [events, setEvents] = useState({
+		openCart: [() => setCartIsOpen(true)],
+		closeCart: [() => setCartIsOpen(false)],
+	})
 
-	async function emit(label, ...args){
-		if (!events[label]) return
-		const fns = events[label]
-		for(let i = 0; i < fns.length; i++){
-			const result = await fns[i](...args)
-			if(!result) return false
-		}
-		return true
-	}
-
+	// Update total quantity and price when line items update
 	useEffect(() => {
-		// Update total quantity and price
 		let newTotalQuantity = 0
 		let newTotalPrice = 0
 		for(let i = lineItems.length; i--;){
@@ -32,24 +34,33 @@ export default function UlyssesProvider({ children, plugins = [], uid = `sku` })
 		setTotalPrice(newTotalPrice)
 	}, [lineItems])
 
+	// Exposed via useUlysses
+	const ulysses = {
+		uid,
+		lineItems,
+		setLineItems,
+		pricing,
+		setPricing,
+		inventory,
+		setInventory,
+		totalQuantity,
+		totalPrice,
+		plugins,
+		emit,
+		isLoading,
+		setIsLoading,
+		events,
+		setEvents,
+		cartIsOpen,
+		setCartIsOpen,
+	}
+	ulysses.addToCart = item => addToCart({ item, ...ulysses })
+	ulysses.emit = (label, ...args) => emit({ label, args, ...ulysses })
+	ulysses.checkout = () => checkout(ulysses)
+	ulysses.adjustQuantity = (productId, amount) => adjustQuantity({productId, amount, ...ulysses})
+
 	return(
-		<Context.Provider value={{
-			uid,
-			lineItems,
-			setLineItems,
-			pricing,
-			setPricing,
-			inventory,
-			setInventory,
-			totalQuantity,
-			totalPrice,
-			plugins,
-			emit,
-			isAddingToCart,
-			setIsAddingToCart,
-			events,
-			setEvents,
-		}}>
+		<Context.Provider value={ulysses}>
 			{children}
 		</Context.Provider>
 	)

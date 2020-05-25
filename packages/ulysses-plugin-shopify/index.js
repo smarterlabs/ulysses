@@ -35,7 +35,7 @@ export default function ShopifyPlugin({ clientOptions }) {
 					quantity: item.quantity,
 					customAttributes: [{ key: `ulyssesItem`, value: JSON.stringify(item) }],
 				}])
-				// console.log(`Shopify add item result`, checkout.lineItems[0])
+				console.log(`Shopify add item result`, checkout.lineItems[0])
 			}
 			catch(err){
 				console.log(`Shopify addLineItems failed`)
