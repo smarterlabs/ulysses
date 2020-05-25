@@ -9,40 +9,48 @@ export default async function addToCart({
 	setLineItems,
 }) {
 	setIsLoading(true)
-	item = {
-		price: 0,
-		quantity: 1,
-		...item,
-	}
+	const items = (Array.isArray(item) ? item : [item]).map(item => {
+		return {
+			price: 0,
+			quantity: 1,
+			...item,
+		}
+	})
 
 	// Run events from plugins
 	try {
-		await emit(`addToCart`, item)
+		await emit(`addToCart`, items)
 	}
 	catch(err){
 		console.log(`addToCart failed`)
 		console.error(err)
 	}
 
-	let updatedItem = false
 	let newLineItems = [...lineItems]
-	if (uid) {
-		for (let i = newLineItems.length; i--;) {
-			const oldItem = newLineItems[i]
-			if (oldItem[uid] === item[uid]) {
-				let quantity = oldItem.quantity + item.quantity
-				for (let i in item) {
-					oldItem[i] = item[i]
+
+	items.forEach(item => {
+		let updatedItem = false
+		if (uid) {
+			for (let i = newLineItems.length; i--;) {
+				const oldItem = newLineItems[i]
+				if (oldItem[uid] === item[uid]) {
+					let quantity = oldItem.quantity + item.quantity
+					for (let i in item) {
+						oldItem[i] = item[i]
+					}
+					oldItem.quantity = quantity
+					updatedItem = true
+					break
 				}
-				oldItem.quantity = quantity
-				updatedItem = true
-				break
 			}
 		}
-	}
-	if (!updatedItem) {
-		newLineItems.push(item)
-	}
+		if (!updatedItem) {
+			newLineItems.push(item)
+		}
+	})
+
+
+
 	clearEmpty(lineItems)
 	setLineItems(newLineItems)
 	setIsLoading(false)

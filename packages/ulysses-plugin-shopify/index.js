@@ -42,21 +42,27 @@ export default function ShopifyPlugin(options) {
 			return true
 		}
 
-		async function onAddToCart(item) {
-			if (!item.shopifyId) {
-				console.error(`"shopifyId" is required for addToCart method.`)
-				return false
+		async function onAddToCart(items) {
+			for (let i = items.length; i--;) {
+				if (!items[i].shopifyId) {
+					console.error(`"shopifyId" is required for addToCart method.`)
+					return false
+				}
 			}
 			checkout = await getCheckout()
 			try {
-				checkout = await client.checkout.addLineItems(checkout.id, [{
-					variantId: item.shopifyId,
-					quantity: item.quantity,
-				}])
-				checkout.lineItems.forEach(lineItem => {
-					if (lineItem.variant.id === item.shopifyId){
-						item.lineItemId = lineItem.id
+				checkout = await client.checkout.addLineItems(checkout.id, items.map(item => {
+					return {
+						variantId: item.shopifyId,
+						quantity: item.quantity,
 					}
+				}))
+				items.forEach(item => {
+					checkout.lineItems.forEach(lineItem => {
+						if (lineItem.variant.id === item.shopifyId) {
+							item.lineItemId = lineItem.id
+						}
+					})
 				})
 			}
 			catch(err){
