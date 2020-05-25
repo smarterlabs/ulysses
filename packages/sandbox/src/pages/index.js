@@ -18,6 +18,7 @@ function Page() {
 				<div>
 					<button onClick={() => addToCart({
 						sku: `APL`,
+						shopifyId: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMzc3ODU5MDM1MTQ5Ng==`,
 						title: `Apple`,
 						price: 50,
 					})}>Add Apple to Cart</button>
@@ -61,9 +62,15 @@ function Page() {
 }
 
 export default function Layout(){
+	console.log(`Layout`)
 	return (
 		<UlyssesProvider>
-			<UlyssesPluginShopify client={{test:true}} />
+			<UlyssesPluginShopify
+				clientOptions={{
+					storefrontAccessToken: `1e5affc44fbe68334d8e2e5c07851d3f`,
+					domain: `labs-boilerplate.myshopify.com`,
+				}}
+			/>
 			<Page />
 		</UlyssesProvider>
 	)

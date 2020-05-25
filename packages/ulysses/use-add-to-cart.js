@@ -12,7 +12,11 @@ export default function useAddToCart(){
 			quantity: 1,
 			...item,
 		}
-		await emit(`addToCart`, item)
+		const result = await emit(`addToCart`, item)
+		if(!result){
+			console.error(`addToCart failed`)
+			return
+		}
 		let updatedItem = false
 		let newLineItems = [...lineItems]
 		if(uid){

@@ -12,7 +12,12 @@ export default function UlyssesProvider({ children, plugins = [], uid = `sku` })
 
 	async function emit(label, ...args){
 		if (!events[label]) return
-		await Promise.all(events[label].map(fn => fn(...args)))
+		const fns = events[label]
+		for(let i = 0; i < fns.length; i++){
+			const result = await fns[i](...args)
+			if(!result) return false
+		}
+		return true
 	}
 
 	useEffect(() => {

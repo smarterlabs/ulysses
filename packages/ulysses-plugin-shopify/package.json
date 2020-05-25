@@ -15,6 +15,7 @@
     "react": "*"
   },
   "dependencies": {
-    "deepmerge": "^4.2.2"
+    "deepmerge": "^4.2.2",
+    "shopify-buy": "^2.10.0"
   }
 }
