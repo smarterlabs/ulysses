@@ -1,19 +1,18 @@
 {
-  "name": "@smarterlabs/ulysses-js",
+  "name": "@smarterlabs/ulysses",
   "private": false,
   "version": "0.0.0",
-  "author": "Kennedy Rose <kennedyianrose@gmail.com>",
-  "main": "dist/index.js",
+  "author": "https://smarterlabs.com",
+  "main": "use-ulysses.js",
   "scripts": {
     "build": "yarn run clean && babel src --out-dir dist",
     "clean": "del dist",
     "dev": "babel src --watch --out-dir dist",
     "test": "yarn run build && jest"
   },
+  "peerDependencies": {
+    "react": "*"
+  },
   "devDependencies": {},
-  "dependencies": {
-    "@babel/runtime": "^7.8.3",
-    "clone-deep": "^4.0.1",
-    "js-cookie": "^2.2.1"
-  }
+  "dependencies": {}
 }

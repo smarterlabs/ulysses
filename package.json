@@ -9,8 +9,8 @@
   "scripts": {
     "build": "lerna run build --stream --scope @smarterlabs/*",
     "clean": "lerna run clean --stream --no-sort",
-    "dev": "yarn run build && lerna run dev --parallel --stream --no-sort",
-    "dev:core": "cd packages/core && yarn dev",
+    "dev": "yarn dev:sandbox",
+    "dev:all": "yarn run build && lerna run dev --parallel --stream --no-sort",
     "dev:sandbox": "cd packages/sandbox && yarn dev",
     "lint": "eslint ./",
     "lint:fix": "eslint ./ --fix",

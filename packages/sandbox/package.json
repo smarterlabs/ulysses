@@ -11,13 +11,13 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.6.0",
-    "@smarterlabs/gatsby-plugin-ulysses": "*",
-    "@smarterlabs/ulysses-plugin-react": "*",
+    "@smarterlabs/ulysses": "*",
+    "@smarterlabs/ulysses-plugin-shopify": "*",
     "babel-preset-gatsby": "^0.2.13",
+    "gatsby": "^2.13.80",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "gatsby": "^2.13.80"
+    "react-dom": "^16.8.6"
   },
-  "main": "dist/index.js",
-  "devDependencies": { }
+  "main": "src/pages/index.js",
+  "devDependencies": {}
 }

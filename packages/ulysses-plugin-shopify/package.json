@@ -1,9 +1,9 @@
 {
-  "name": "@smarterlabs/ulysses-plugin-react",
+  "name": "@smarterlabs/ulysses-plugin-shopify",
+  "private": false,
   "version": "0.0.0",
-  "author": "Kennedy Rose <kennedyianrose@gmail.com>",
-  "license": "MIT",
-  "main": "dist/index.js",
+  "author": "https://smarterlabs.com",
+  "main": "index.js",
   "scripts": {
     "build": "yarn run clean && babel src --out-dir dist",
     "clean": "del dist",
@@ -11,10 +11,11 @@
     "test": "yarn run build && jest"
   },
   "peerDependencies": {
-    "react": "^16.4.2"
+    "@smarterlabs/ulysses-plugin-shopify": "*",
+    "react": "*"
   },
   "dependencies": {
-    "@babel/runtime": "^7.8.4",
-    "@smarterlabs/ulysses-js": "*"
+    "deepmerge": "^4.2.2",
+    "shopify-buy": "^2.10.0"
   }
 }
