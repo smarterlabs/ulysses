@@ -5,7 +5,6 @@ import useUlysses from '@smarterlabs/ulysses/use-ulysses'
 
 function UlyssesSandboxPage() {
 	const ulysses = useUlysses()
-	const { addToCart, adjustQuantity, remove } = ulysses
 
 	return (
 		<main>
@@ -14,7 +13,7 @@ function UlyssesSandboxPage() {
 				<h3>Functions</h3>
 				<div>
 					<button
-						onClick={() => addToCart({
+						onClick={() => ulysses.addToCart({
 							sku: `APL`,
 							shopifyId: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zMzc3ODU5MDM1MTQ5Ng==`,
 							title: `Apple`,
@@ -25,13 +24,13 @@ function UlyssesSandboxPage() {
 						Add Apple to Cart
 					</button>
 					<button
-						onClick={() => adjustQuantity(`APL`, -1)}
+						onClick={() => ulysses.adjustQuantity(`APL`, -1)}
 						disabled={ulysses.isLoading ? true : false}
 					>
 						Subtract 1 Apple
 					</button>
 					<button
-						onClick={() => remove(`APL`)}
+						onClick={() => ulysses.remove(`APL`)}
 						disabled={ulysses.isLoading ? true : false}
 					>
 						Remove All Apples
@@ -39,8 +38,9 @@ function UlyssesSandboxPage() {
 				</div>
 				<div>
 					<button
-						onClick={() => addToCart({
+						onClick={() => ulysses.addToCart({
 							sku: `OBAMA`,
+							shopifyId: `Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8zNDA0MTExMzczOTQwMA==`,
 							title: `Orangebanan`,
 							price: 15,
 						})}
