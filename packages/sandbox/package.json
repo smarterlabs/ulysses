@@ -1,7 +1,7 @@
 {
   "name": "sandbox",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "build": "gatsby build --verbose",
     "clean": "gatsby clean",
@@ -11,13 +11,12 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.6.0",
-    "@smarterlabs/ulysses": "*",
-    "@smarterlabs/ulysses-plugin-shopify": "*",
+    "@smarterlabs/ulysses": "^0.0.1",
+    "@smarterlabs/ulysses-plugin-shopify": "^0.0.1",
     "babel-preset-gatsby": "^0.2.13",
     "gatsby": "^2.13.80",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },
-  "main": "src/pages/index.js",
-  "devDependencies": {}
+  "main": "src/pages/index.js"
 }

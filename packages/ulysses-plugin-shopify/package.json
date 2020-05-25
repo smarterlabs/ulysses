@@ -1,7 +1,7 @@
 {
   "name": "@smarterlabs/ulysses-plugin-shopify",
   "private": false,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "https://smarterlabs.com",
   "main": "index.js",
   "scripts": {
