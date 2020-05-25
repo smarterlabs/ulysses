@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import useUlysses from '@smarterlabs/ulysses/use-ulysses'
+import { useUlysses } from '@smarterlabs/ulysses'
 import Client from 'shopify-buy'
 
 export default function ShopifyPlugin(options) {
