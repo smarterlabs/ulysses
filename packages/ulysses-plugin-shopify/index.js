@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import useUlysses from '@smarterlabs/ulysses/use-ulysses'
-import merge from 'deepmerge'
 import Client from 'shopify-buy'
 
 export default function ShopifyPlugin(options) {
@@ -19,16 +18,18 @@ export default function ShopifyPlugin(options) {
 			return checkout
 		}
 
-		async function onAdjustQuantity(item, amount){
-			if (!item.lineItemId){
+		async function onAdjustQuantity(args){
+			console.log(`args`, args)
+			let { lineItem, amount } = args
+			if (!lineItem.lineItemId){
 				console.error(`"lineItemId" is required for onAdjustQuantity method.`)
 				return false
 			}
 			checkout = await getCheckout()
 			try {
 				const newItem = {
-					id: item.lineItemId,
-					quantity: item.quantity + amount,
+					id: lineItem.lineItemId,
+					quantity: lineItem.quantity + amount,
 					// customAttributes: [{ key: `ulyssesItem`, value: JSON.stringify(item) }],
 				}
 				checkout = await client.checkout.updateLineItems(checkout.id, [newItem])
@@ -102,23 +103,20 @@ export default function ShopifyPlugin(options) {
 			state.shopifyCheckoutId = checkout.id
 		}
 		async function onLoadState({ state }) {
-			console.log(`Shopify load state`, state)
-			if (state.shopifyCheckoutId){
+			console.log(`Shopify load state`, JSON.stringify(state), typeof state)
+			if (!state.shopifyCheckoutId){
 				console.warn(`"shopifyCheckoutId" not found in loaded state`)
 				return
 			}
 			checkout = await client.checkout.fetch(state.shopifyCheckoutId)
 		}
 
-		let events = merge(ulysses.events, {
-			addToCart: [onAddToCart],
-			adjustQuantity: [onAdjustQuantity],
-			checkout: [onCheckout],
-			remove: [onRemove],
-			saveState: [onSaveState],
-			loadState: [onLoadState],
-		})
-		ulysses.setEvents(events)
+		ulysses.on(`addToCart`, onAddToCart)
+		ulysses.on(`adjustQuantity`, onAdjustQuantity)
+		ulysses.on(`checkout`, onCheckout)
+		ulysses.on(`remove`, onRemove)
+		ulysses.on(`saveState`, onSaveState)
+		ulysses.on(`loadState`, onLoadState)
 	}, [])
 	return null
 }

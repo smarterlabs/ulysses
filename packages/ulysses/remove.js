@@ -20,11 +20,7 @@ export default async function remove({
 	setIsLoading(true)
 
 	// Run events from plugins
-	const result = await emit(`remove`, item)
-	if (!result) {
-		console.error(`remove failed`)
-		return
-	}
+	await emit(`remove`, item)
 
 	let newLineItems = [...lineItems]
 	for (let i = newLineItems.length; i--;) {

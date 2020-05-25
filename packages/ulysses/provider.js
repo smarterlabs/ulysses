@@ -1,10 +1,38 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useReducer } from 'react'
 import Context from './context'
 import addToCart from './add-to-cart'
-import emit from './emit'
 import checkout from './checkout'
 import adjustQuantity from './adjust-quantity'
 import remove from './remove'
+
+function eventsReducer(oldEvents, { type, label, fn, cb, data }) {
+
+	// Add event
+	if (type === `on`) {
+		const events = { ...oldEvents }
+		if (!events[label]) {
+			events[label] = []
+		}
+		events[label].push(fn)
+		return events
+	}
+
+	// Emit event
+	if (type === `emit`) {
+		if (!oldEvents[label]) {
+			console.error(`Emitting event label`, label, `not found`)
+			return oldEvents
+		}
+		runEvents(oldEvents[label], cb, data)
+		return oldEvents
+	}
+}
+async function runEvents(events, cb, data) {
+	for (let i = 0; i < events.length; i++) {
+		await events[i](data)
+	}
+	cb()
+}
 
 export default function UlyssesProvider({
 	children,
@@ -20,10 +48,23 @@ export default function UlyssesProvider({
 	const [isLoading, setIsLoading] = useState(false)
 	const [cartIsOpen, setCartIsOpen] = useState(false)
 	const [hasInit, setHasInit] = useState(false)
-	const [events, setEvents] = useState({
-		openCart: [() => setCartIsOpen(true)],
-		closeCart: [() => setCartIsOpen(false)],
-	})
+	const [events, eventsDispatch] = useReducer(eventsReducer, {})
+
+
+	function on(label, fn) {
+		eventsDispatch({ label, fn, type: `on` })
+	}
+	function emit(label, data) {
+		console.log(`Emitting`, label, data)
+		return new Promise((resolve) => {
+			eventsDispatch({
+				label,
+				type: `emit`,
+				cb: resolve,
+				data,
+			})
+		})
+	}
 
 
 	useEffect(() => {
@@ -61,7 +102,7 @@ export default function UlyssesProvider({
 		}
 		state = JSON.parse(state)
 		async function loadState(){
-			await emit({ ...ulysses, label: `loadState`, state })
+			await ulysses.emit(`loadState`, { ...ulysses, state })
 			console.log(`Emitted load state`)
 			if (state.lineItems) {
 				setLineItems(state.lineItems)
@@ -69,7 +110,7 @@ export default function UlyssesProvider({
 		}
 		setTimeout(loadState, 1000)
 		// loadState()
-	}, [emit])
+	}, [])
 
 	// Exposed via useUlysses
 	const ulysses = {
@@ -83,16 +124,15 @@ export default function UlyssesProvider({
 		totalQuantity,
 		totalPrice,
 		plugins,
+		on,
 		emit,
 		isLoading,
 		setIsLoading,
-		events,
-		setEvents,
 		cartIsOpen,
+		events,
 		setCartIsOpen,
 	}
 	ulysses.addToCart = item => addToCart({ item, ...ulysses })
-	ulysses.emit = (label, ...args) => emit({ label, args, ...ulysses })
 	ulysses.checkout = () => checkout(ulysses)
 	ulysses.adjustQuantity = (productId, amount) => adjustQuantity({ productId, amount, ...ulysses })
 	ulysses.remove = productId => remove({ productId, ...ulysses })

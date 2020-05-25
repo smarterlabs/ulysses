@@ -16,10 +16,12 @@ export default async function addToCart({
 	}
 
 	// Run events from plugins
-	const result = await emit(`addToCart`, item)
-	if (!result) {
-		console.error(`addToCart failed`)
-		return setIsLoading(false)
+	try {
+		await emit(`addToCart`, item)
+	}
+	catch(err){
+		console.log(`addToCart failed`)
+		console.error(err)
 	}
 
 	let updatedItem = false

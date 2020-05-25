@@ -24,11 +24,7 @@ export default async function updateQuantity({
 	}
 
 	// Run events from plugins
-	const result = await emit(`adjustQuantity`, lineItem, amount)
-	if (!result) {
-		console.error(`addToCart failed`)
-		return setIsLoading(false)
-	}
+	await emit(`adjustQuantity`, { lineItem, amount })
 
 	lineItem.quantity += amount
 	clearEmpty(newLineItems)
